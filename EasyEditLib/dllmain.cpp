@@ -2,6 +2,7 @@
 #include "stdafx.h"
 #include "Mouse.h"
 #include "Keyboard.h"
+#include "Config.h"
 
 bool g_IsGameUp           = false;
 unsigned int g_LastWeapon = -1;
@@ -35,13 +36,56 @@ int g_RealEditBind   = 'L';
 int g_WallRetakeBind = 'G';
 int g_ShotgunBind    = '3';
 
+Config* g_Config;
 
-#include <fstream>
 extern "C"
 {
+	DllExport void InitConfig()
+	{
+		g_Config = new Config("config.cfg");
+
+		g_FakeEditBind           = g_Config->FindValue("FakeEdit");
+		g_RealEditBind           = g_Config->FindValue("RealEdit");
+		g_WallRetakeBind         = g_Config->FindValue("WallRetake");
+		g_ShotgunBind            = g_Config->FindValue("Shotgun");
+		g_BuildList[Build_Floor] = g_Config->FindValue("Floor");
+		g_BuildList[Build_Stair] = g_Config->FindValue("Stair");
+		g_BuildList[Build_Cone]  = g_Config->FindValue("Cone");
+		g_BuildList[Build_Wall]  = g_Config->FindValue("Wall");
+		g_WeaponList[0]          = g_Config->FindValue("Weapon1");
+		g_WeaponList[1]          = g_Config->FindValue("Weapon2");
+		g_WeaponList[2]          = g_Config->FindValue("Weapon3");
+		g_WeaponList[3]          = g_Config->FindValue("Weapon4");
+		g_WeaponList[4]          = g_Config->FindValue("Weapon5");
+		g_WeaponList[5]          = g_Config->FindValue("Weapon6");
+
+	}
+
 	DllExport void SetWeaponHotkey(int index, int vk)
 	{
 		g_WeaponList[index] = vk;
+		
+		switch(index)
+		{
+		case 0:
+			g_Config->SetValue("Weapon1", vk);
+			break;
+		case 1:
+			g_Config->SetValue("Weapon2", vk);
+			break;
+		case 2:
+			g_Config->SetValue("Weapon3", vk);
+			break;
+		case 3:
+			g_Config->SetValue("Weapon4", vk);
+			break;
+		case 4:
+			g_Config->SetValue("Weapon5", vk);
+			break;
+		case 5:
+			g_Config->SetValue("Weapon6", vk);
+			break;
+		}
 	}
 
 	DllExport int GetWeaponHotkey(int index)
@@ -52,6 +96,22 @@ extern "C"
 	DllExport void SetBuildHotkey(int index, int vk)
 	{
 		g_BuildList[index] = vk;
+
+		switch (index)
+		{
+		case Build_Floor:
+			g_Config->SetValue("Floor", vk);
+			break;
+		case Build_Stair:
+			g_Config->SetValue("Stair", vk);
+			break;
+		case Build_Cone:
+			g_Config->SetValue("Cone", vk);
+			break;
+		case Build_Wall:
+			g_Config->SetValue("Wall", vk);
+			break;
+		}
 	}
 
 	DllExport int GetBuildHotkey(int index)
@@ -61,6 +121,7 @@ extern "C"
 
 	DllExport void SetFakeEditHotkey(int vk)
 	{
+		g_Config->SetValue("FakeEdit", vk);
 		g_FakeEditBind = vk;
 	}
 
@@ -71,6 +132,7 @@ extern "C"
 
 	DllExport void SetRealEditHotkey(int vk)
 	{
+		g_Config->SetValue("RealEdit", vk);
 		g_RealEditBind = vk;
 	}
 
@@ -81,6 +143,7 @@ extern "C"
 
 	DllExport void SetWallRetakeHotkey(int vk)
 	{
+		g_Config->SetValue("WallRetake", vk);
 		g_WallRetakeBind = vk;
 	}
 
@@ -91,6 +154,7 @@ extern "C"
 
 	DllExport void SetShotgunHotkey(int vk)
 	{
+		g_Config->SetValue("Shotgun", vk);
 		g_ShotgunBind = vk;
 	}
 

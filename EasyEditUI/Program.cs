@@ -17,6 +17,9 @@ namespace EasyEditUI
 		}
 
 		[DllImport("EasyEditLib.dll", CallingConvention = CallingConvention.Cdecl)]
+		public static extern void InitConfig();
+
+		[DllImport("EasyEditLib.dll", CallingConvention = CallingConvention.Cdecl)]
 		public static extern void SetWeaponHotkey(int index, int vk);
 
 		[DllImport("EasyEditLib.dll", CallingConvention = CallingConvention.Cdecl)]
@@ -217,6 +220,7 @@ namespace EasyEditUI
 		{
 			Hotkey h = new Hotkey();
 			h.CreateKeyboardMap();
+			Hotkey.InitConfig();
 			Hotkey.m_CheckForegroundThread = new Thread(Hotkey.CheckForegroundT);
 			Hotkey.m_UpdateLastKeysThread  = new Thread(Hotkey.UpdateLastKeysT);
 			Hotkey.m_EditThread            = new Thread(Hotkey.EditT);
