@@ -6,6 +6,35 @@ using System.Threading;
 
 namespace EasyEditUI
 {
+	class Program
+	{
+		[STAThread]
+		static void Main()
+		{
+			Hotkey.CreateKeyboardMap();
+			Hotkey.InitConfig();
+
+			Hotkey.m_CheckForegroundThread = new Thread(Hotkey.CheckForegroundT);
+			Hotkey.m_UpdateLastKeysThread  = new Thread(Hotkey.UpdateLastKeysT);
+			Hotkey.m_EditThread            = new Thread(Hotkey.EditT);
+			Hotkey.m_WallReplaceThread     = new Thread(Hotkey.WallReplaceT);
+
+			Hotkey.m_CheckForegroundThread.IsBackground = true;
+			Hotkey.m_UpdateLastKeysThread.IsBackground  = true;
+			Hotkey.m_EditThread.IsBackground            = true;
+			Hotkey.m_WallReplaceThread.IsBackground     = true;
+
+			Hotkey.m_CheckForegroundThread.Start();
+			Hotkey.m_UpdateLastKeysThread.Start();
+			Hotkey.m_EditThread.Start();
+			Hotkey.m_WallReplaceThread.Start();
+
+			Application.EnableVisualStyles();
+			Application.SetCompatibleTextRenderingDefault(false);
+			Application.Run(new Form1());
+		}
+	}
+
 	class Hotkey
 	{
 		public enum BuildType
@@ -73,16 +102,16 @@ namespace EasyEditUI
 
 		private static List<Pair<int, string>> KeyboardMap = new List<Pair<int, string>>();
 
-		public void CreateKeyboardMap()
+		public static void CreateKeyboardMap()
 		{
-			KeyboardMap.Add(new Pair<int, string>(0x1, "LMOUSE"));
-			KeyboardMap.Add(new Pair<int, string>(0x2, "RMOUSE"));
-			KeyboardMap.Add(new Pair<int, string>(0x4, "MIDDLEMOUSE"));
-			KeyboardMap.Add(new Pair<int, string>(0x5, "MB BACK"));
-			KeyboardMap.Add(new Pair<int, string>(0x6, "MB FORWARD"));
-			KeyboardMap.Add(new Pair<int, string>(0x8, "BACKSPACE"));
-			KeyboardMap.Add(new Pair<int, string>(0x9, "TAB"));
-			KeyboardMap.Add(new Pair<int, string>(0xd, "ENTER"));
+			KeyboardMap.Add(new Pair<int, string>(0x01, "LMOUSE"));
+			KeyboardMap.Add(new Pair<int, string>(0x02, "RMOUSE"));
+			KeyboardMap.Add(new Pair<int, string>(0x04, "MIDDLEMOUSE"));
+			KeyboardMap.Add(new Pair<int, string>(0x05, "MB BACK"));
+			KeyboardMap.Add(new Pair<int, string>(0x06, "MB FORWARD"));
+			KeyboardMap.Add(new Pair<int, string>(0x08, "BACKSPACE"));
+			KeyboardMap.Add(new Pair<int, string>(0x09, "TAB"));
+			KeyboardMap.Add(new Pair<int, string>(0x0d, "ENTER"));
 			KeyboardMap.Add(new Pair<int, string>(0x14, "CAPS LOCK"));
 			KeyboardMap.Add(new Pair<int, string>(0x20, "SPACE"));
 			KeyboardMap.Add(new Pair<int, string>(0x21, "PAGE UP"));
@@ -213,51 +242,19 @@ namespace EasyEditUI
 		}
 	}
 
-	class Program
+	public class Pair<T, U>
 	{
-		[STAThread]
-		static void Main()
+		public Pair()
 		{
-			Hotkey h = new Hotkey();
-			h.CreateKeyboardMap();
-			Hotkey.InitConfig();
-			Hotkey.m_CheckForegroundThread = new Thread(Hotkey.CheckForegroundT);
-			Hotkey.m_UpdateLastKeysThread  = new Thread(Hotkey.UpdateLastKeysT);
-			Hotkey.m_EditThread            = new Thread(Hotkey.EditT);
-			Hotkey.m_WallReplaceThread     = new Thread(Hotkey.WallReplaceT);
-
-			Hotkey.m_CheckForegroundThread.IsBackground = true;
-			Hotkey.m_UpdateLastKeysThread.IsBackground  = true;
-			Hotkey.m_EditThread.IsBackground            = true;
-			Hotkey.m_WallReplaceThread.IsBackground     = true;
-			//Hotkey.m_WallReplaceThread.
-
-			Hotkey.m_CheckForegroundThread.Start();
-			Hotkey.m_UpdateLastKeysThread.Start();
-			Hotkey.m_EditThread.Start();
-			Hotkey.m_WallReplaceThread.Start();
-
-			Application.EnableVisualStyles();
-			Application.SetCompatibleTextRenderingDefault(false);
-			Application.Run(new Form1());
 		}
-	}
+
+		public Pair(T first, U second)
+		{
+			this.First  = first;
+			this.Second = second;
+		}
+
+		public T First { get; set; }
+		public U Second { get; set; }
+	};
 }
-
-
-
-public class Pair<T, U>
-{
-	public Pair()
-	{
-	}
-
-	public Pair(T first, U second)
-	{
-		this.First = first;
-		this.Second = second;
-	}
-
-	public T First { get; set; }
-	public U Second { get; set; }
-};

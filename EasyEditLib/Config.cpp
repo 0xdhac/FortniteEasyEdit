@@ -18,9 +18,21 @@ Config::Config(std::string file)
 	{
 		FILE* f;
 		fopen_s(&f, file.c_str(), "w");
-		fclose(f);
 
-		CreateConfig();
+		if (f)
+		{
+			failed = true;
+		}
+		else
+		{
+			failed = false;
+			fclose(f);
+			CreateConfig();
+		}
+	}
+	else
+	{
+		failed = false;
 	}
 }
 
@@ -57,6 +69,11 @@ void Config::CreateConfig()
 
 bool Config::AttemptToOpenFile()
 {
+	if (failed)
+	{
+		return false;
+	}
+
 	if (m_File.is_open())
 	{
 		m_File.clear();
@@ -143,7 +160,6 @@ void Config::SetValue(std::string key, int value)
 
 			AttemptToCloseFile();
 		}
-
 	}
 
 }

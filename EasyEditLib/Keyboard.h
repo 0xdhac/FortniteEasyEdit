@@ -1,6 +1,6 @@
 #pragma once
 
-struct DllExport Keyboard
+struct Keyboard
 {
 	static void HoldKey(DWORD key);
 	static void ReleaseKey(DWORD key);

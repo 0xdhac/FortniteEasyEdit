@@ -16,7 +16,6 @@ namespace EasyEditUI
 		public Form1()
 		{
 			InitializeComponent();
-			this.FormClosing += (Form_Closing);
 		}
 
 		private void Form1_Load(object sender, EventArgs e)
@@ -37,15 +36,7 @@ namespace EasyEditUI
 			this.Weapon5KeyBox.Text    = Hotkey.GetHotkeyName(Hotkey.GetWeaponHotkey(5));
 		}
 
-		private void Form_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-		{
-			Hotkey.m_CheckForegroundThread.Abort();
-			Hotkey.m_UpdateLastKeysThread.Abort();
-			Hotkey.m_WallReplaceThread.Abort();
-			Hotkey.m_EditThread.Abort();
-		}
-
-			private void FakeEditKeyButton_Click(object sender, EventArgs e)
+		private void FakeEditKeyButton_Click(object sender, EventArgs e)
 		{
 			KeyListenForm f = new KeyListenForm(this, this.FakeEditKeyBox);
 		}

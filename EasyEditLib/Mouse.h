@@ -1,6 +1,6 @@
 #pragma once
 
-struct DllExport Mouse
+struct Mouse
 {
 	static void LeftClickHold();
 	static void LeftClickRelease();
