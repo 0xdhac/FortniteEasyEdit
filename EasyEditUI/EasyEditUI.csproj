@@ -95,7 +95,6 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="iconfinder_anime_spirited_away_no_face_nobody_4043233.ico" />
     <Content Include="icons8-hacking-32.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -4,15 +4,6 @@
 #include "Keyboard.h"
 #include "Config.h"
 
-bool g_IsGameUp           = false;
-unsigned int g_LastWeapon = -1;
-unsigned int g_LastBuild  = -1;
-
-#define KEY_WALL VK_XBUTTON2
-#define KEY_FLOOR 'Q'
-#define KEY_STAIR 'C'
-#define KEY_CONE VK_XBUTTON1
-
 enum BuildType
 {
 	Build_Floor,
@@ -20,6 +11,30 @@ enum BuildType
 	Build_Cone,
 	Build_Wall
 };
+
+enum LastKeyType
+{
+	Key_None,
+	Key_Build,
+	Key_Weapon
+};
+
+#define KEY_WALL VK_XBUTTON2
+#define KEY_FLOOR 'Q'
+#define KEY_STAIR 'C'
+#define KEY_CONE VK_XBUTTON1
+
+bool g_IsGameUp           = false;
+unsigned int g_LastWeapon = -1;
+unsigned int g_LastBuild  = -1;
+LastKeyType g_LastKeyType = Key_None;
+int g_FakeEditBind        = VK_LSHIFT;
+int g_RealEditBind        = 'L';
+int g_FakeCrouchBind      = VK_LCONTROL;
+int g_RealCrouchBind      = 'U';
+int g_DoorShotBind        = 'Y';
+int g_WallRetakeBind      = 'G';
+int g_ShotgunBind         = '3';
 
 int g_BuildList[] =
 {
@@ -31,11 +46,6 @@ int g_WeaponList[] =
 	'1', '2', '3', '4', '5', '6'
 };
 
-int g_FakeEditBind   = VK_LSHIFT;
-int g_RealEditBind   = 'L';
-int g_WallRetakeBind = 'G';
-int g_ShotgunBind    = '3';
-
 Config* g_Config;
 
 extern "C"
@@ -46,6 +56,9 @@ extern "C"
 
 		g_FakeEditBind           = g_Config->FindValue("FakeEdit");
 		g_RealEditBind           = g_Config->FindValue("RealEdit");
+		g_FakeCrouchBind		 = g_Config->FindValue("FakeCrouch");
+		g_RealCrouchBind		 = g_Config->FindValue("RealCrouch");
+		g_DoorShotBind			 = g_Config->FindValue("DoorShot");
 		g_WallRetakeBind         = g_Config->FindValue("WallRetake");
 		g_ShotgunBind            = g_Config->FindValue("Shotgun");
 		g_BuildList[Build_Floor] = g_Config->FindValue("Floor");
@@ -58,7 +71,6 @@ extern "C"
 		g_WeaponList[3]          = g_Config->FindValue("Weapon4");
 		g_WeaponList[4]          = g_Config->FindValue("Weapon5");
 		g_WeaponList[5]          = g_Config->FindValue("Weapon6");
-
 	}
 
 	DllExport void SetWeaponHotkey(int index, int vk)
@@ -141,6 +153,39 @@ extern "C"
 		return g_RealEditBind;
 	}
 
+	DllExport void SetFakeCrouchHotkey(int vk)
+	{
+		g_Config->SetValue("FakeCrouch", vk);
+		g_FakeCrouchBind = vk;
+	}
+
+	DllExport int GetFakeCrouchHotkey()
+	{
+		return g_FakeCrouchBind;
+	}
+
+	DllExport void SetRealCrouchHotkey(int vk)
+	{
+		g_Config->SetValue("RealCrouch", vk);
+		g_RealCrouchBind = vk;
+	}
+
+	DllExport int GetRealCrouchHotkey()
+	{
+		return g_RealCrouchBind;
+	}
+
+	DllExport void SetDoorShotHotkey(int vk)
+	{
+		g_Config->SetValue("DoorShot", vk);
+		g_DoorShotBind = vk;
+	}
+
+	DllExport int GetDoorShotHotkey()
+	{
+		return g_DoorShotBind;
+	}
+
 	DllExport void SetWallRetakeHotkey(int vk)
 	{
 		g_Config->SetValue("WallRetake", vk);
@@ -175,6 +220,12 @@ extern "C"
 				if (bIsEditKeyPressed == false && GetAsyncKeyState(g_FakeEditBind))
 				{
 					bIsEditKeyPressed = true;
+
+					if (g_LastKeyType == Key_Build && g_LastWeapon != -1)
+					{
+						Keyboard::PressKey(g_WeaponList[g_LastWeapon], (rand() % 10) + 10);
+						Sleep((rand() % 10) + 10);
+					}
 
 					Keyboard::PressKey(g_RealEditBind, (rand() % 15) + 15); // Start edit
 					Sleep((rand() % 10) + 10); // Wait 10(+ 0-10)ms to allow edit reset
@@ -247,6 +298,77 @@ extern "C"
 		}
 	}
 
+	DllExport void DoorShotT()
+	{
+		srand(time(NULL));
+
+		bool bPressedKey = false;
+
+		while (true)
+		{
+			if (g_IsGameUp)
+			{
+				if (bPressedKey == false && GetAsyncKeyState(g_DoorShotBind))
+				{
+					bPressedKey = true;
+
+					Keyboard::HoldKey('E');
+					Sleep((rand() % 15));
+					Mouse::RightClickHold();
+					Sleep((rand() % 15) + 10);
+					Mouse::LeftClick((rand() % 15) + 10);
+					Sleep((rand() % 15));
+					Mouse::RightClickRelease();
+					Sleep((rand() % 15));
+					Keyboard::ReleaseKey('E');
+				}
+				else if (bPressedKey == true && !GetAsyncKeyState(g_DoorShotBind))
+				{
+					bPressedKey = false;
+				}
+
+				Sleep(1);
+			}
+			else
+			{
+				Sleep(100);
+			}
+		}
+	}
+
+	DllExport void CrouchT()
+	{
+		srand(time(NULL));
+		bool bIsCrouchKeyPressed = false;
+
+		while (true)
+		{
+			if (g_IsGameUp)
+			{
+				if (bIsCrouchKeyPressed == false && GetAsyncKeyState(g_FakeCrouchBind))
+				{
+					bIsCrouchKeyPressed = true;
+
+					Keyboard::PressKey(g_RealCrouchBind, (rand() % 15) + 15); // Start crouch
+				}
+
+				if (bIsCrouchKeyPressed == true && !GetAsyncKeyState(g_FakeCrouchBind))
+				{
+					bIsCrouchKeyPressed = false;
+
+					Keyboard::PressKey(g_RealCrouchBind, (rand() % 15) + 15); // End crouch
+
+				}
+
+				Sleep(1);
+			}
+			else
+			{
+				Sleep(100);
+			}
+		}
+	}
+
 	DllExport void CheckForegroundT()
 	{
 		while (true)
@@ -272,7 +394,8 @@ extern "C"
 				{
 					if (GetAsyncKeyState(g_BuildList[i]))
 					{
-						g_LastBuild = i;
+						g_LastBuild   = i;
+						g_LastKeyType = Key_Build;
 					}
 				}
 
@@ -280,7 +403,8 @@ extern "C"
 				{
 					if (GetAsyncKeyState(g_WeaponList[i]))
 					{
-						g_LastWeapon = i;
+						g_LastWeapon  = i;
+						g_LastKeyType = Key_Weapon;
 					}
 				}
 

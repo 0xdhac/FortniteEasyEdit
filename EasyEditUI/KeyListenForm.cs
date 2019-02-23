@@ -22,17 +22,17 @@ namespace EasyEditUI
 			int index;
 			int vK;
 
-			if(e.Shift) //0xa0
+			if(e.Shift)
 			{
 				vK    = 0xa0;
 				index = Hotkey.GetHotkeyIndex(vK);
 			}
-			else if(e.Alt)  // 0xa4
+			else if(e.Alt)
 			{
 				vK    = 0xa4;
 				index = Hotkey.GetHotkeyIndex(vK);
 			}
-			else if(e.Control) //0xa2
+			else if(e.Control)
 			{
 				vK    = 0xa2;
 				index = Hotkey.GetHotkeyIndex(vK);
@@ -103,6 +103,18 @@ namespace EasyEditUI
 			else if (m_textBox == m_Parent.Weapon5KeyBox)
 			{
 				Hotkey.SetWeaponHotkey(5, vK);
+			}
+			else if (m_textBox == m_Parent.FakeCrouchKeyBox)
+			{
+				Hotkey.SetFakeCrouchHotkey(vK);
+			}
+			else if (m_textBox == m_Parent.RealCrouchKeyBox)
+			{
+				Hotkey.SetRealCrouchHotkey(vK);
+			}
+			else if (m_textBox == m_Parent.DoorShotKeyBox)
+			{
+				Hotkey.SetDoorShotHotkey(vK);
 			}
 
 			this.Close();
@@ -184,6 +196,18 @@ namespace EasyEditUI
 			else if (m_textBox == m_Parent.Weapon5KeyBox)
 			{
 				Hotkey.SetWeaponHotkey(5, vK);
+			}
+			else if (m_textBox == m_Parent.FakeCrouchKeyBox)
+			{
+				Hotkey.SetFakeCrouchHotkey(vK);
+			}
+			else if (m_textBox == m_Parent.RealCrouchKeyBox)
+			{
+				Hotkey.SetRealCrouchHotkey(vK);
+			}
+			else if (m_textBox == m_Parent.DoorShotKeyBox)
+			{
+				Hotkey.SetDoorShotHotkey(vK);
 			}
 
 			this.Close();

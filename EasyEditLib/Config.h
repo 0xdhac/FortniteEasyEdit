@@ -17,6 +17,5 @@ public:
 	~Config();
 	int FindValue(std::string key);
 	void SetValue(std::string key, int value);
-	bool m_FileExists;
 	bool failed;
 };

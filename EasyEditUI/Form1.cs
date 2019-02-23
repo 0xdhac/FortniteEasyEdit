@@ -22,6 +22,9 @@ namespace EasyEditUI
 		{
 			this.FakeEditKeyBox.Text   = Hotkey.GetHotkeyName(Hotkey.GetFakeEditHotkey());
 			this.RealEditKeyBox.Text   = Hotkey.GetHotkeyName(Hotkey.GetRealEditHotkey());
+			this.FakeCrouchKeyBox.Text = Hotkey.GetHotkeyName(Hotkey.GetFakeCrouchHotkey());
+			this.RealCrouchKeyBox.Text = Hotkey.GetHotkeyName(Hotkey.GetRealCrouchHotkey());
+			this.DoorShotKeyBox.Text   = Hotkey.GetHotkeyName(Hotkey.GetDoorShotHotkey());
 			this.WallRetakeKeyBox.Text = Hotkey.GetHotkeyName(Hotkey.GetWallRetakeHotkey());
 			this.ShotgunKeyBox.Text    = Hotkey.GetHotkeyName(Hotkey.GetShotgunHotkey());
 			this.WallKeyBox.Text       = Hotkey.GetHotkeyName(Hotkey.GetBuildHotkey((int)Hotkey.BuildType.Build_Wall));

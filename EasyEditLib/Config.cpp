@@ -11,15 +11,14 @@ Config::Config(std::string file)
 
 	char baskSlash[2] = "\\";
 	m_Path = dirPath + std::string("\\") + file;
-	std::cout << m_Path.c_str() << std::endl;
 
 	struct stat buffer;
 	if ((stat(m_Path.c_str(), &buffer) != 0))
 	{
 		FILE* f;
-		fopen_s(&f, file.c_str(), "w");
+		int err = fopen_s(&f, m_Path.c_str(), "w");
 
-		if (f)
+		if (err)
 		{
 			failed = true;
 		}
@@ -46,20 +45,23 @@ void Config::CreateConfig()
 	if (AttemptToOpenFile())
 	{
 		std::string line;
-		line += "FakeEdit=" + std::to_string(VK_LSHIFT) + "\n";
-		line += "RealEdit=" + std::to_string((int)'L') + "\n";
+		line += "FakeEdit="   + std::to_string(VK_LSHIFT) + "\n";
+		line += "RealEdit="   + std::to_string((int)'L') + "\n";
+		line += "FakeCrouch=" + std::to_string(VK_LCONTROL) + "\n";
+		line += "RealCrouch=" + std::to_string((int)'U') + "\n";
+		line += "DoorShot="   + std::to_string((int)'Y') + "\n";
 		line += "WallRetake=" + std::to_string((int)'G') + "\n";
-		line += "Shotgun=" + std::to_string((int)'3') + "\n";
-		line += "Floor=" + std::to_string((int)'Q') + "\n";
-		line += "Stair=" + std::to_string((int)'C') + "\n";
-		line += "Cone=" + std::to_string(VK_XBUTTON1) + "\n";
-		line += "Wall=" + std::to_string(VK_XBUTTON2) + "\n";
-		line += "Weapon1=" + std::to_string((int)'1') + "\n";
-		line += "Weapon2=" + std::to_string((int)'2') + "\n";
-		line += "Weapon3=" + std::to_string((int)'3') + "\n";
-		line += "Weapon4=" + std::to_string((int)'4') + "\n";
-		line += "Weapon5=" + std::to_string((int)'5') + "\n";
-		line += "Weapon6=" + std::to_string((int)'6') + "\n";
+		line += "Shotgun="    + std::to_string((int)'3') + "\n";
+		line += "Floor="      + std::to_string((int)'Q') + "\n";
+		line += "Stair="      + std::to_string((int)'C') + "\n";
+		line += "Cone="       + std::to_string(VK_XBUTTON1) + "\n";
+		line += "Wall="       + std::to_string(VK_XBUTTON2) + "\n";
+		line += "Weapon1="    + std::to_string((int)'1') + "\n";
+		line += "Weapon2="    + std::to_string((int)'2') + "\n";
+		line += "Weapon3="    + std::to_string((int)'3') + "\n";
+		line += "Weapon4="    + std::to_string((int)'4') + "\n";
+		line += "Weapon5="    + std::to_string((int)'5') + "\n";
+		line += "Weapon6="    + std::to_string((int)'6') + "\n";
 
 		m_File.write(line.c_str(), line.size());
 

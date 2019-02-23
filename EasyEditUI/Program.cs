@@ -18,16 +18,22 @@ namespace EasyEditUI
 			Hotkey.m_UpdateLastKeysThread  = new Thread(Hotkey.UpdateLastKeysT);
 			Hotkey.m_EditThread            = new Thread(Hotkey.EditT);
 			Hotkey.m_WallReplaceThread     = new Thread(Hotkey.WallReplaceT);
+			Hotkey.m_CrouchThread          = new Thread(Hotkey.CrouchT);
+			Hotkey.m_DoorShotThread        = new Thread(Hotkey.DoorShotT);
 
 			Hotkey.m_CheckForegroundThread.IsBackground = true;
 			Hotkey.m_UpdateLastKeysThread.IsBackground  = true;
 			Hotkey.m_EditThread.IsBackground            = true;
 			Hotkey.m_WallReplaceThread.IsBackground     = true;
+			Hotkey.m_CrouchThread.IsBackground          = true;
+			Hotkey.m_DoorShotThread.IsBackground        = true;
 
 			Hotkey.m_CheckForegroundThread.Start();
 			Hotkey.m_UpdateLastKeysThread.Start();
 			Hotkey.m_EditThread.Start();
 			Hotkey.m_WallReplaceThread.Start();
+			Hotkey.m_CrouchThread.Start();
+			Hotkey.m_DoorShotThread.Start();
 
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
@@ -67,6 +73,24 @@ namespace EasyEditUI
 		public static extern int GetFakeEditHotkey();
 
 		[DllImport("EasyEditLib.dll", CallingConvention = CallingConvention.Cdecl)]
+		public static extern void SetFakeCrouchHotkey(int vk);
+
+		[DllImport("EasyEditLib.dll", CallingConvention = CallingConvention.Cdecl)]
+		public static extern int GetFakeCrouchHotkey();
+
+		[DllImport("EasyEditLib.dll", CallingConvention = CallingConvention.Cdecl)]
+		public static extern void SetRealCrouchHotkey(int vk);
+
+		[DllImport("EasyEditLib.dll", CallingConvention = CallingConvention.Cdecl)]
+		public static extern int GetRealCrouchHotkey();
+
+		[DllImport("EasyEditLib.dll", CallingConvention = CallingConvention.Cdecl)]
+		public static extern void SetDoorShotHotkey(int vk);
+
+		[DllImport("EasyEditLib.dll", CallingConvention = CallingConvention.Cdecl)]
+		public static extern int GetDoorShotHotkey();
+
+		[DllImport("EasyEditLib.dll", CallingConvention = CallingConvention.Cdecl)]
 		public static extern void SetRealEditHotkey(int vk);
 
 		[DllImport("EasyEditLib.dll", CallingConvention = CallingConvention.Cdecl)]
@@ -99,6 +123,14 @@ namespace EasyEditUI
 		[DllImport("EasyEditLib.dll", CallingConvention = CallingConvention.Cdecl)]
 		public static extern void UpdateLastKeysT();
 		public static Thread m_UpdateLastKeysThread;
+
+		[DllImport("EasyEditLib.dll", CallingConvention = CallingConvention.Cdecl)]
+		public static extern void CrouchT();
+		public static Thread m_CrouchThread;
+
+		[DllImport("EasyEditLib.dll", CallingConvention = CallingConvention.Cdecl)]
+		public static extern void DoorShotT();
+		public static Thread m_DoorShotThread;
 
 		private static List<Pair<int, string>> KeyboardMap = new List<Pair<int, string>>();
 
