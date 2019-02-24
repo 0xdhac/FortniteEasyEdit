@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Diagnostics;
 
 namespace EasyEditUI
 {
@@ -11,6 +12,11 @@ namespace EasyEditUI
 		[STAThread]
 		static void Main()
 		{
+			#if !DEBUG
+			if (Debugger.IsAttached)
+				return;
+			#endif
+
 			Hotkey.CreateKeyboardMap();
 			Hotkey.InitConfig();
 
@@ -71,6 +77,12 @@ namespace EasyEditUI
 
 		[DllImport("EasyEditLib.dll", CallingConvention = CallingConvention.Cdecl)]
 		public static extern int GetFakeEditHotkey();
+
+		[DllImport("EasyEditLib.dll", CallingConvention = CallingConvention.Cdecl)]
+		public static extern void SetUseHotkey(int vk);
+
+		[DllImport("EasyEditLib.dll", CallingConvention = CallingConvention.Cdecl)]
+		public static extern int GetUseHotkey();
 
 		[DllImport("EasyEditLib.dll", CallingConvention = CallingConvention.Cdecl)]
 		public static extern void SetFakeCrouchHotkey(int vk);

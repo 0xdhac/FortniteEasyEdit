@@ -35,6 +35,7 @@ int g_RealCrouchBind      = 'U';
 int g_DoorShotBind        = 'Y';
 int g_WallRetakeBind      = 'G';
 int g_ShotgunBind         = '3';
+int g_UseBind             = 'E';
 
 int g_BuildList[] =
 {
@@ -59,6 +60,7 @@ extern "C"
 		g_FakeCrouchBind		 = g_Config->FindValue("FakeCrouch");
 		g_RealCrouchBind		 = g_Config->FindValue("RealCrouch");
 		g_DoorShotBind			 = g_Config->FindValue("DoorShot");
+		g_UseBind                = g_Config->FindValue("Use");
 		g_WallRetakeBind         = g_Config->FindValue("WallRetake");
 		g_ShotgunBind            = g_Config->FindValue("Shotgun");
 		g_BuildList[Build_Floor] = g_Config->FindValue("Floor");
@@ -140,6 +142,17 @@ extern "C"
 	DllExport int GetFakeEditHotkey()
 	{
 		return g_FakeEditBind;
+	}
+
+	DllExport void SetUseHotkey(int vk)
+	{
+		g_Config->SetValue("Use", vk);
+		g_UseBind = vk;
+	}
+
+	DllExport int GetUseHotkey()
+	{
+		return g_UseBind;
 	}
 
 	DllExport void SetRealEditHotkey(int vk)
@@ -312,7 +325,7 @@ extern "C"
 				{
 					bPressedKey = true;
 
-					Keyboard::HoldKey('E');
+					Keyboard::HoldKey(g_UseBind);
 					Sleep((rand() % 15));
 					Mouse::RightClickHold();
 					Sleep((rand() % 15) + 10);
@@ -320,7 +333,7 @@ extern "C"
 					Sleep((rand() % 15));
 					Mouse::RightClickRelease();
 					Sleep((rand() % 15));
-					Keyboard::ReleaseKey('E');
+					Keyboard::ReleaseKey(g_UseBind);
 				}
 				else if (bPressedKey == true && !GetAsyncKeyState(g_DoorShotBind))
 				{

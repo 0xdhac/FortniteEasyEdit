@@ -51,6 +51,7 @@ void Config::CreateConfig()
 		line += "RealCrouch=" + std::to_string((int)'U') + "\n";
 		line += "DoorShot="   + std::to_string((int)'Y') + "\n";
 		line += "WallRetake=" + std::to_string((int)'G') + "\n";
+		line += "Use="        + std::to_string((int)'E') + "\n";
 		line += "Shotgun="    + std::to_string((int)'3') + "\n";
 		line += "Floor="      + std::to_string((int)'Q') + "\n";
 		line += "Stair="      + std::to_string((int)'C') + "\n";

@@ -35,10 +35,12 @@ namespace EasyEditUI
 			this.FakeEditKeyBox = new System.Windows.Forms.TextBox();
 			this.FakeEditKeyButton = new System.Windows.Forms.Button();
 			this.FakeEditKeyLabel = new System.Windows.Forms.Label();
-			this.FakeEditKeyTooltip = new System.Windows.Forms.ToolTip(this.components);
 			this.RealEditKeyLabel = new System.Windows.Forms.Label();
 			this.WallRetakeKeyLabel = new System.Windows.Forms.Label();
 			this.ShotgunKeyLabel = new System.Windows.Forms.Label();
+			this.DoorShotLabel = new System.Windows.Forms.Label();
+			this.RealCrouchKeyLabel = new System.Windows.Forms.Label();
+			this.FakeCrouchKeyLabel = new System.Windows.Forms.Label();
 			this.RealEditKeyButton = new System.Windows.Forms.Button();
 			this.RealEditKeyBox = new System.Windows.Forms.TextBox();
 			this.WallRetakeKeyButton = new System.Windows.Forms.Button();
@@ -75,15 +77,16 @@ namespace EasyEditUI
 			this.Weapon5Label = new System.Windows.Forms.Label();
 			this.Weapon5KeyButton = new System.Windows.Forms.Button();
 			this.Weapon5KeyBox = new System.Windows.Forms.TextBox();
-			this.DoorShotLabel = new System.Windows.Forms.Label();
 			this.DoorShotButton = new System.Windows.Forms.Button();
 			this.DoorShotKeyBox = new System.Windows.Forms.TextBox();
-			this.RealCrouchKeyLabel = new System.Windows.Forms.Label();
 			this.RealCrouchKeyButton = new System.Windows.Forms.Button();
 			this.RealCrouchKeyBox = new System.Windows.Forms.TextBox();
-			this.FakeCrouchKeyLabel = new System.Windows.Forms.Label();
 			this.FakeCrouchKeyButton = new System.Windows.Forms.Button();
 			this.FakeCrouchKeyBox = new System.Windows.Forms.TextBox();
+			this.UseKeyLabel = new System.Windows.Forms.Label();
+			this.UseKeyButton = new System.Windows.Forms.Button();
+			this.UseKeyBox = new System.Windows.Forms.TextBox();
+			this.FormTooltip = new System.Windows.Forms.ToolTip(this.components);
 			this.SuspendLayout();
 			// 
 			// FakeEditKeyBox
@@ -105,7 +108,6 @@ namespace EasyEditUI
 			this.FakeEditKeyButton.TabIndex = 1;
 			this.FakeEditKeyButton.Text = "Change";
 			this.FakeEditKeyButton.UseVisualStyleBackColor = true;
-			this.FakeEditKeyButton.Click += new System.EventHandler(this.FakeEditKeyButton_Click);
 			// 
 			// FakeEditKeyLabel
 			// 
@@ -115,13 +117,7 @@ namespace EasyEditUI
 			this.FakeEditKeyLabel.Size = new System.Drawing.Size(86, 13);
 			this.FakeEditKeyLabel.TabIndex = 2;
 			this.FakeEditKeyLabel.Text = "Fake edit key (?)";
-			this.FakeEditKeyTooltip.SetToolTip(this.FakeEditKeyLabel, "The button you physically press to start an edit.");
-			// 
-			// FakeEditKeyTooltip
-			// 
-			this.FakeEditKeyTooltip.IsBalloon = true;
-			this.FakeEditKeyTooltip.ShowAlways = true;
-			this.FakeEditKeyTooltip.StripAmpersands = true;
+			this.FormTooltip.SetToolTip(this.FakeEditKeyLabel, "The button you physically press to start an edit.");
 			// 
 			// RealEditKeyLabel
 			// 
@@ -131,7 +127,7 @@ namespace EasyEditUI
 			this.RealEditKeyLabel.Size = new System.Drawing.Size(84, 13);
 			this.RealEditKeyLabel.TabIndex = 5;
 			this.RealEditKeyLabel.Text = "Real edit key (?)";
-			this.FakeEditKeyTooltip.SetToolTip(this.RealEditKeyLabel, "The button that is actually bound to edit structures in your game settings.");
+			this.FormTooltip.SetToolTip(this.RealEditKeyLabel, "The button that is actually bound to edit structures in your game settings.");
 			// 
 			// WallRetakeKeyLabel
 			// 
@@ -141,19 +137,53 @@ namespace EasyEditUI
 			this.WallRetakeKeyLabel.Size = new System.Drawing.Size(96, 13);
 			this.WallRetakeKeyLabel.TabIndex = 8;
 			this.WallRetakeKeyLabel.Text = "Wall retake key (?)";
-			this.FakeEditKeyTooltip.SetToolTip(this.WallRetakeKeyLabel, "This button is used to replace an enemy\'s wall by attacking it and quickly replac" +
+			this.FormTooltip.SetToolTip(this.WallRetakeKeyLabel, "This button is used to replace an enemy\'s wall by attacking it and quickly replac" +
         "ing it. Good with any hitscan weapons that do a lot of structure damage per bull" +
         "et.");
 			// 
 			// ShotgunKeyLabel
 			// 
 			this.ShotgunKeyLabel.AutoSize = true;
-			this.ShotgunKeyLabel.Location = new System.Drawing.Point(25, 167);
+			this.ShotgunKeyLabel.Location = new System.Drawing.Point(25, 193);
 			this.ShotgunKeyLabel.Name = "ShotgunKeyLabel";
 			this.ShotgunKeyLabel.Size = new System.Drawing.Size(82, 13);
 			this.ShotgunKeyLabel.TabIndex = 11;
 			this.ShotgunKeyLabel.Text = "Shotgun key (?)";
-			this.FakeEditKeyTooltip.SetToolTip(this.ShotgunKeyLabel, "The macro will press this button when you finish editing a structure.");
+			this.FormTooltip.SetToolTip(this.ShotgunKeyLabel, "The macro will press this button when you finish editing a structure.");
+			// 
+			// DoorShotLabel
+			// 
+			this.DoorShotLabel.AutoSize = true;
+			this.DoorShotLabel.Location = new System.Drawing.Point(6, 114);
+			this.DoorShotLabel.Name = "DoorShotLabel";
+			this.DoorShotLabel.Size = new System.Drawing.Size(101, 13);
+			this.DoorShotLabel.TabIndex = 50;
+			this.DoorShotLabel.Text = "Door shot button (?)";
+			this.FormTooltip.SetToolTip(this.DoorShotLabel, "When this button is pressed, the macro will open the door you\'re looking at and s" +
+        "hoot immediately.");
+			// 
+			// RealCrouchKeyLabel
+			// 
+			this.RealCrouchKeyLabel.AutoSize = true;
+			this.RealCrouchKeyLabel.Location = new System.Drawing.Point(7, 87);
+			this.RealCrouchKeyLabel.Name = "RealCrouchKeyLabel";
+			this.RealCrouchKeyLabel.Size = new System.Drawing.Size(100, 13);
+			this.RealCrouchKeyLabel.TabIndex = 47;
+			this.RealCrouchKeyLabel.Text = "Real crouch key (?)";
+			this.FormTooltip.SetToolTip(this.RealCrouchKeyLabel, "The button that is actually bound to crouch in-game. Make sure you have this set " +
+        "for \'Crouch while editing\' and \'Crouch while building\' in the game settings as w" +
+        "ell.");
+			// 
+			// FakeCrouchKeyLabel
+			// 
+			this.FakeCrouchKeyLabel.AutoSize = true;
+			this.FakeCrouchKeyLabel.Location = new System.Drawing.Point(5, 61);
+			this.FakeCrouchKeyLabel.Name = "FakeCrouchKeyLabel";
+			this.FakeCrouchKeyLabel.Size = new System.Drawing.Size(102, 13);
+			this.FakeCrouchKeyLabel.TabIndex = 44;
+			this.FakeCrouchKeyLabel.Text = "Fake crouch key (?)";
+			this.FormTooltip.SetToolTip(this.FakeCrouchKeyLabel, "This button is for having Hold to crouch instead of Toggle crouch. This is the bu" +
+        "tton you will physically press to crouch.");
 			// 
 			// RealEditKeyButton
 			// 
@@ -164,7 +194,6 @@ namespace EasyEditUI
 			this.RealEditKeyButton.TabIndex = 4;
 			this.RealEditKeyButton.Text = "Change";
 			this.RealEditKeyButton.UseVisualStyleBackColor = true;
-			this.RealEditKeyButton.Click += new System.EventHandler(this.RealEditKeyButton_Click);
 			// 
 			// RealEditKeyBox
 			// 
@@ -185,7 +214,6 @@ namespace EasyEditUI
 			this.WallRetakeKeyButton.TabIndex = 7;
 			this.WallRetakeKeyButton.Text = "Change";
 			this.WallRetakeKeyButton.UseVisualStyleBackColor = true;
-			this.WallRetakeKeyButton.Click += new System.EventHandler(this.WallRetakeKeyButton_Click);
 			// 
 			// WallRetakeKeyBox
 			// 
@@ -200,18 +228,17 @@ namespace EasyEditUI
 			// ShotgunKeyButton
 			// 
 			this.ShotgunKeyButton.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.ShotgunKeyButton.Location = new System.Drawing.Point(219, 163);
+			this.ShotgunKeyButton.Location = new System.Drawing.Point(219, 189);
 			this.ShotgunKeyButton.Name = "ShotgunKeyButton";
 			this.ShotgunKeyButton.Size = new System.Drawing.Size(75, 21);
 			this.ShotgunKeyButton.TabIndex = 10;
 			this.ShotgunKeyButton.Text = "Change";
 			this.ShotgunKeyButton.UseVisualStyleBackColor = true;
-			this.ShotgunKeyButton.Click += new System.EventHandler(this.ShotgunKeyButton_Click);
 			// 
 			// ShotgunKeyBox
 			// 
 			this.ShotgunKeyBox.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-			this.ShotgunKeyBox.Location = new System.Drawing.Point(113, 163);
+			this.ShotgunKeyBox.Location = new System.Drawing.Point(113, 189);
 			this.ShotgunKeyBox.Name = "ShotgunKeyBox";
 			this.ShotgunKeyBox.ReadOnly = true;
 			this.ShotgunKeyBox.Size = new System.Drawing.Size(100, 20);
@@ -221,7 +248,7 @@ namespace EasyEditUI
 			// WallButtonLabel
 			// 
 			this.WallButtonLabel.AutoSize = true;
-			this.WallButtonLabel.Location = new System.Drawing.Point(59, 193);
+			this.WallButtonLabel.Location = new System.Drawing.Point(59, 219);
 			this.WallButtonLabel.Name = "WallButtonLabel";
 			this.WallButtonLabel.Size = new System.Drawing.Size(48, 13);
 			this.WallButtonLabel.TabIndex = 14;
@@ -230,18 +257,17 @@ namespace EasyEditUI
 			// WallKeyButton
 			// 
 			this.WallKeyButton.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.WallKeyButton.Location = new System.Drawing.Point(219, 189);
+			this.WallKeyButton.Location = new System.Drawing.Point(219, 215);
 			this.WallKeyButton.Name = "WallKeyButton";
 			this.WallKeyButton.Size = new System.Drawing.Size(75, 21);
 			this.WallKeyButton.TabIndex = 13;
 			this.WallKeyButton.Text = "Change";
 			this.WallKeyButton.UseVisualStyleBackColor = true;
-			this.WallKeyButton.Click += new System.EventHandler(this.WallKeyButton_Click);
 			// 
 			// WallKeyBox
 			// 
 			this.WallKeyBox.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-			this.WallKeyBox.Location = new System.Drawing.Point(113, 189);
+			this.WallKeyBox.Location = new System.Drawing.Point(113, 215);
 			this.WallKeyBox.Name = "WallKeyBox";
 			this.WallKeyBox.ReadOnly = true;
 			this.WallKeyBox.Size = new System.Drawing.Size(100, 20);
@@ -251,7 +277,7 @@ namespace EasyEditUI
 			// FloorButtonLabel
 			// 
 			this.FloorButtonLabel.AutoSize = true;
-			this.FloorButtonLabel.Location = new System.Drawing.Point(57, 219);
+			this.FloorButtonLabel.Location = new System.Drawing.Point(57, 245);
 			this.FloorButtonLabel.Name = "FloorButtonLabel";
 			this.FloorButtonLabel.Size = new System.Drawing.Size(50, 13);
 			this.FloorButtonLabel.TabIndex = 17;
@@ -260,18 +286,17 @@ namespace EasyEditUI
 			// FloorKeyButton
 			// 
 			this.FloorKeyButton.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.FloorKeyButton.Location = new System.Drawing.Point(219, 215);
+			this.FloorKeyButton.Location = new System.Drawing.Point(219, 241);
 			this.FloorKeyButton.Name = "FloorKeyButton";
 			this.FloorKeyButton.Size = new System.Drawing.Size(75, 21);
 			this.FloorKeyButton.TabIndex = 16;
 			this.FloorKeyButton.Text = "Change";
 			this.FloorKeyButton.UseVisualStyleBackColor = true;
-			this.FloorKeyButton.Click += new System.EventHandler(this.FloorKeyButton_Click);
 			// 
 			// FloorKeyBox
 			// 
 			this.FloorKeyBox.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-			this.FloorKeyBox.Location = new System.Drawing.Point(113, 215);
+			this.FloorKeyBox.Location = new System.Drawing.Point(113, 241);
 			this.FloorKeyBox.Name = "FloorKeyBox";
 			this.FloorKeyBox.ReadOnly = true;
 			this.FloorKeyBox.Size = new System.Drawing.Size(100, 20);
@@ -281,7 +306,7 @@ namespace EasyEditUI
 			// StairButtonLabel
 			// 
 			this.StairButtonLabel.AutoSize = true;
-			this.StairButtonLabel.Location = new System.Drawing.Point(59, 245);
+			this.StairButtonLabel.Location = new System.Drawing.Point(59, 271);
 			this.StairButtonLabel.Name = "StairButtonLabel";
 			this.StairButtonLabel.Size = new System.Drawing.Size(48, 13);
 			this.StairButtonLabel.TabIndex = 20;
@@ -290,18 +315,17 @@ namespace EasyEditUI
 			// StairKeyButton
 			// 
 			this.StairKeyButton.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.StairKeyButton.Location = new System.Drawing.Point(219, 241);
+			this.StairKeyButton.Location = new System.Drawing.Point(219, 267);
 			this.StairKeyButton.Name = "StairKeyButton";
 			this.StairKeyButton.Size = new System.Drawing.Size(75, 21);
 			this.StairKeyButton.TabIndex = 19;
 			this.StairKeyButton.Text = "Change";
 			this.StairKeyButton.UseVisualStyleBackColor = true;
-			this.StairKeyButton.Click += new System.EventHandler(this.StairKeyButton_Click);
 			// 
 			// StairKeyBox
 			// 
 			this.StairKeyBox.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-			this.StairKeyBox.Location = new System.Drawing.Point(113, 241);
+			this.StairKeyBox.Location = new System.Drawing.Point(113, 267);
 			this.StairKeyBox.Name = "StairKeyBox";
 			this.StairKeyBox.ReadOnly = true;
 			this.StairKeyBox.Size = new System.Drawing.Size(100, 20);
@@ -311,7 +335,7 @@ namespace EasyEditUI
 			// ConeButtonLabel
 			// 
 			this.ConeButtonLabel.AutoSize = true;
-			this.ConeButtonLabel.Location = new System.Drawing.Point(55, 271);
+			this.ConeButtonLabel.Location = new System.Drawing.Point(55, 297);
 			this.ConeButtonLabel.Name = "ConeButtonLabel";
 			this.ConeButtonLabel.Size = new System.Drawing.Size(52, 13);
 			this.ConeButtonLabel.TabIndex = 23;
@@ -320,18 +344,17 @@ namespace EasyEditUI
 			// ConeKeyButton
 			// 
 			this.ConeKeyButton.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.ConeKeyButton.Location = new System.Drawing.Point(219, 267);
+			this.ConeKeyButton.Location = new System.Drawing.Point(219, 293);
 			this.ConeKeyButton.Name = "ConeKeyButton";
 			this.ConeKeyButton.Size = new System.Drawing.Size(75, 21);
 			this.ConeKeyButton.TabIndex = 22;
 			this.ConeKeyButton.Text = "Change";
 			this.ConeKeyButton.UseVisualStyleBackColor = true;
-			this.ConeKeyButton.Click += new System.EventHandler(this.ConeKeyButton_Click);
 			// 
 			// ConeKeyBox
 			// 
 			this.ConeKeyBox.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-			this.ConeKeyBox.Location = new System.Drawing.Point(113, 267);
+			this.ConeKeyBox.Location = new System.Drawing.Point(113, 293);
 			this.ConeKeyBox.Name = "ConeKeyBox";
 			this.ConeKeyBox.ReadOnly = true;
 			this.ConeKeyBox.Size = new System.Drawing.Size(100, 20);
@@ -341,7 +364,7 @@ namespace EasyEditUI
 			// PickaxeButtonLabel
 			// 
 			this.PickaxeButtonLabel.AutoSize = true;
-			this.PickaxeButtonLabel.Location = new System.Drawing.Point(42, 296);
+			this.PickaxeButtonLabel.Location = new System.Drawing.Point(42, 322);
 			this.PickaxeButtonLabel.Name = "PickaxeButtonLabel";
 			this.PickaxeButtonLabel.Size = new System.Drawing.Size(65, 13);
 			this.PickaxeButtonLabel.TabIndex = 26;
@@ -350,18 +373,17 @@ namespace EasyEditUI
 			// PickaxeKeyButton
 			// 
 			this.PickaxeKeyButton.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.PickaxeKeyButton.Location = new System.Drawing.Point(219, 293);
+			this.PickaxeKeyButton.Location = new System.Drawing.Point(219, 319);
 			this.PickaxeKeyButton.Name = "PickaxeKeyButton";
 			this.PickaxeKeyButton.Size = new System.Drawing.Size(75, 21);
 			this.PickaxeKeyButton.TabIndex = 25;
 			this.PickaxeKeyButton.Text = "Change";
 			this.PickaxeKeyButton.UseVisualStyleBackColor = true;
-			this.PickaxeKeyButton.Click += new System.EventHandler(this.PickaxeKeyButton_Click);
 			// 
 			// PickaxeKeyBox
 			// 
 			this.PickaxeKeyBox.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-			this.PickaxeKeyBox.Location = new System.Drawing.Point(113, 293);
+			this.PickaxeKeyBox.Location = new System.Drawing.Point(113, 319);
 			this.PickaxeKeyBox.Name = "PickaxeKeyBox";
 			this.PickaxeKeyBox.ReadOnly = true;
 			this.PickaxeKeyBox.Size = new System.Drawing.Size(100, 20);
@@ -371,7 +393,7 @@ namespace EasyEditUI
 			// Weapon1Label
 			// 
 			this.Weapon1Label.AutoSize = true;
-			this.Weapon1Label.Location = new System.Drawing.Point(30, 322);
+			this.Weapon1Label.Location = new System.Drawing.Point(30, 348);
 			this.Weapon1Label.Name = "Weapon1Label";
 			this.Weapon1Label.Size = new System.Drawing.Size(77, 13);
 			this.Weapon1Label.TabIndex = 29;
@@ -380,18 +402,17 @@ namespace EasyEditUI
 			// Weapon1KeyButton
 			// 
 			this.Weapon1KeyButton.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.Weapon1KeyButton.Location = new System.Drawing.Point(219, 319);
+			this.Weapon1KeyButton.Location = new System.Drawing.Point(219, 345);
 			this.Weapon1KeyButton.Name = "Weapon1KeyButton";
 			this.Weapon1KeyButton.Size = new System.Drawing.Size(75, 21);
 			this.Weapon1KeyButton.TabIndex = 28;
 			this.Weapon1KeyButton.Text = "Change";
 			this.Weapon1KeyButton.UseVisualStyleBackColor = true;
-			this.Weapon1KeyButton.Click += new System.EventHandler(this.Weapon1KeyButton_Click);
 			// 
 			// Weapon1KeyBox
 			// 
 			this.Weapon1KeyBox.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-			this.Weapon1KeyBox.Location = new System.Drawing.Point(113, 319);
+			this.Weapon1KeyBox.Location = new System.Drawing.Point(113, 345);
 			this.Weapon1KeyBox.Name = "Weapon1KeyBox";
 			this.Weapon1KeyBox.ReadOnly = true;
 			this.Weapon1KeyBox.Size = new System.Drawing.Size(100, 20);
@@ -401,7 +422,7 @@ namespace EasyEditUI
 			// Weapon2Label
 			// 
 			this.Weapon2Label.AutoSize = true;
-			this.Weapon2Label.Location = new System.Drawing.Point(30, 349);
+			this.Weapon2Label.Location = new System.Drawing.Point(30, 375);
 			this.Weapon2Label.Name = "Weapon2Label";
 			this.Weapon2Label.Size = new System.Drawing.Size(77, 13);
 			this.Weapon2Label.TabIndex = 32;
@@ -410,18 +431,17 @@ namespace EasyEditUI
 			// Weapon2KeyButton
 			// 
 			this.Weapon2KeyButton.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.Weapon2KeyButton.Location = new System.Drawing.Point(219, 345);
+			this.Weapon2KeyButton.Location = new System.Drawing.Point(219, 371);
 			this.Weapon2KeyButton.Name = "Weapon2KeyButton";
 			this.Weapon2KeyButton.Size = new System.Drawing.Size(75, 21);
 			this.Weapon2KeyButton.TabIndex = 31;
 			this.Weapon2KeyButton.Text = "Change";
 			this.Weapon2KeyButton.UseVisualStyleBackColor = true;
-			this.Weapon2KeyButton.Click += new System.EventHandler(this.Weapon2KeyButton_Click);
 			// 
 			// Weapon2KeyBox
 			// 
 			this.Weapon2KeyBox.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-			this.Weapon2KeyBox.Location = new System.Drawing.Point(113, 345);
+			this.Weapon2KeyBox.Location = new System.Drawing.Point(113, 371);
 			this.Weapon2KeyBox.Name = "Weapon2KeyBox";
 			this.Weapon2KeyBox.ReadOnly = true;
 			this.Weapon2KeyBox.Size = new System.Drawing.Size(100, 20);
@@ -431,7 +451,7 @@ namespace EasyEditUI
 			// Weapon3Label
 			// 
 			this.Weapon3Label.AutoSize = true;
-			this.Weapon3Label.Location = new System.Drawing.Point(30, 375);
+			this.Weapon3Label.Location = new System.Drawing.Point(30, 401);
 			this.Weapon3Label.Name = "Weapon3Label";
 			this.Weapon3Label.Size = new System.Drawing.Size(77, 13);
 			this.Weapon3Label.TabIndex = 35;
@@ -440,18 +460,17 @@ namespace EasyEditUI
 			// Weapon3KeyButton
 			// 
 			this.Weapon3KeyButton.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.Weapon3KeyButton.Location = new System.Drawing.Point(219, 371);
+			this.Weapon3KeyButton.Location = new System.Drawing.Point(219, 397);
 			this.Weapon3KeyButton.Name = "Weapon3KeyButton";
 			this.Weapon3KeyButton.Size = new System.Drawing.Size(75, 21);
 			this.Weapon3KeyButton.TabIndex = 34;
 			this.Weapon3KeyButton.Text = "Change";
 			this.Weapon3KeyButton.UseVisualStyleBackColor = true;
-			this.Weapon3KeyButton.Click += new System.EventHandler(this.Weapon3KeyButton_Click);
 			// 
 			// Weapon3KeyBox
 			// 
 			this.Weapon3KeyBox.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-			this.Weapon3KeyBox.Location = new System.Drawing.Point(113, 371);
+			this.Weapon3KeyBox.Location = new System.Drawing.Point(113, 397);
 			this.Weapon3KeyBox.Name = "Weapon3KeyBox";
 			this.Weapon3KeyBox.ReadOnly = true;
 			this.Weapon3KeyBox.Size = new System.Drawing.Size(100, 20);
@@ -461,7 +480,7 @@ namespace EasyEditUI
 			// Weapon4Label
 			// 
 			this.Weapon4Label.AutoSize = true;
-			this.Weapon4Label.Location = new System.Drawing.Point(30, 401);
+			this.Weapon4Label.Location = new System.Drawing.Point(30, 427);
 			this.Weapon4Label.Name = "Weapon4Label";
 			this.Weapon4Label.Size = new System.Drawing.Size(77, 13);
 			this.Weapon4Label.TabIndex = 38;
@@ -470,18 +489,17 @@ namespace EasyEditUI
 			// Weapon4KeyButton
 			// 
 			this.Weapon4KeyButton.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.Weapon4KeyButton.Location = new System.Drawing.Point(219, 397);
+			this.Weapon4KeyButton.Location = new System.Drawing.Point(219, 423);
 			this.Weapon4KeyButton.Name = "Weapon4KeyButton";
 			this.Weapon4KeyButton.Size = new System.Drawing.Size(75, 21);
 			this.Weapon4KeyButton.TabIndex = 37;
 			this.Weapon4KeyButton.Text = "Change";
 			this.Weapon4KeyButton.UseVisualStyleBackColor = true;
-			this.Weapon4KeyButton.Click += new System.EventHandler(this.Weapon4KeyButton_Click);
 			// 
 			// Weapon4KeyBox
 			// 
 			this.Weapon4KeyBox.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-			this.Weapon4KeyBox.Location = new System.Drawing.Point(113, 397);
+			this.Weapon4KeyBox.Location = new System.Drawing.Point(113, 423);
 			this.Weapon4KeyBox.Name = "Weapon4KeyBox";
 			this.Weapon4KeyBox.ReadOnly = true;
 			this.Weapon4KeyBox.Size = new System.Drawing.Size(100, 20);
@@ -491,7 +509,7 @@ namespace EasyEditUI
 			// Weapon5Label
 			// 
 			this.Weapon5Label.AutoSize = true;
-			this.Weapon5Label.Location = new System.Drawing.Point(30, 427);
+			this.Weapon5Label.Location = new System.Drawing.Point(30, 453);
 			this.Weapon5Label.Name = "Weapon5Label";
 			this.Weapon5Label.Size = new System.Drawing.Size(77, 13);
 			this.Weapon5Label.TabIndex = 41;
@@ -500,34 +518,22 @@ namespace EasyEditUI
 			// Weapon5KeyButton
 			// 
 			this.Weapon5KeyButton.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.Weapon5KeyButton.Location = new System.Drawing.Point(219, 423);
+			this.Weapon5KeyButton.Location = new System.Drawing.Point(219, 449);
 			this.Weapon5KeyButton.Name = "Weapon5KeyButton";
 			this.Weapon5KeyButton.Size = new System.Drawing.Size(75, 21);
 			this.Weapon5KeyButton.TabIndex = 40;
 			this.Weapon5KeyButton.Text = "Change";
 			this.Weapon5KeyButton.UseVisualStyleBackColor = true;
-			this.Weapon5KeyButton.Click += new System.EventHandler(this.Weapon5KeyButton_Click);
 			// 
 			// Weapon5KeyBox
 			// 
 			this.Weapon5KeyBox.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-			this.Weapon5KeyBox.Location = new System.Drawing.Point(113, 423);
+			this.Weapon5KeyBox.Location = new System.Drawing.Point(113, 449);
 			this.Weapon5KeyBox.Name = "Weapon5KeyBox";
 			this.Weapon5KeyBox.ReadOnly = true;
 			this.Weapon5KeyBox.Size = new System.Drawing.Size(100, 20);
 			this.Weapon5KeyBox.TabIndex = 39;
 			this.Weapon5KeyBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-			// 
-			// DoorShotLabel
-			// 
-			this.DoorShotLabel.AutoSize = true;
-			this.DoorShotLabel.Location = new System.Drawing.Point(6, 114);
-			this.DoorShotLabel.Name = "DoorShotLabel";
-			this.DoorShotLabel.Size = new System.Drawing.Size(101, 13);
-			this.DoorShotLabel.TabIndex = 50;
-			this.DoorShotLabel.Text = "Door shot button (?)";
-			this.FakeEditKeyTooltip.SetToolTip(this.DoorShotLabel, "When this button is pressed, the macro will open the door you\'re looking at and s" +
-        "hoot immediately.");
 			// 
 			// DoorShotButton
 			// 
@@ -549,18 +555,6 @@ namespace EasyEditUI
 			this.DoorShotKeyBox.TabIndex = 48;
 			this.DoorShotKeyBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
 			// 
-			// RealCrouchKeyLabel
-			// 
-			this.RealCrouchKeyLabel.AutoSize = true;
-			this.RealCrouchKeyLabel.Location = new System.Drawing.Point(7, 87);
-			this.RealCrouchKeyLabel.Name = "RealCrouchKeyLabel";
-			this.RealCrouchKeyLabel.Size = new System.Drawing.Size(100, 13);
-			this.RealCrouchKeyLabel.TabIndex = 47;
-			this.RealCrouchKeyLabel.Text = "Real crouch key (?)";
-			this.FakeEditKeyTooltip.SetToolTip(this.RealCrouchKeyLabel, "The button that is actually bound to crouch in-game. Make sure you have this set " +
-        "for \'Crouch while editing\' and \'Crouch while building\' in the game settings as w" +
-        "ell.");
-			// 
 			// RealCrouchKeyButton
 			// 
 			this.RealCrouchKeyButton.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -580,17 +574,6 @@ namespace EasyEditUI
 			this.RealCrouchKeyBox.Size = new System.Drawing.Size(100, 20);
 			this.RealCrouchKeyBox.TabIndex = 45;
 			this.RealCrouchKeyBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-			// 
-			// FakeCrouchKeyLabel
-			// 
-			this.FakeCrouchKeyLabel.AutoSize = true;
-			this.FakeCrouchKeyLabel.Location = new System.Drawing.Point(5, 61);
-			this.FakeCrouchKeyLabel.Name = "FakeCrouchKeyLabel";
-			this.FakeCrouchKeyLabel.Size = new System.Drawing.Size(102, 13);
-			this.FakeCrouchKeyLabel.TabIndex = 44;
-			this.FakeCrouchKeyLabel.Text = "Fake crouch key (?)";
-			this.FakeEditKeyTooltip.SetToolTip(this.FakeCrouchKeyLabel, "This button is for having Hold to crouch instead of Toggle crouch. This is the bu" +
-        "tton you will physically press to crouch.");
 			// 
 			// FakeCrouchKeyButton
 			// 
@@ -612,12 +595,50 @@ namespace EasyEditUI
 			this.FakeCrouchKeyBox.TabIndex = 42;
 			this.FakeCrouchKeyBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
 			// 
+			// UseKeyLabel
+			// 
+			this.UseKeyLabel.AutoSize = true;
+			this.UseKeyLabel.Location = new System.Drawing.Point(61, 167);
+			this.UseKeyLabel.Name = "UseKeyLabel";
+			this.UseKeyLabel.Size = new System.Drawing.Size(46, 13);
+			this.UseKeyLabel.TabIndex = 53;
+			this.UseKeyLabel.Text = "Use key";
+			// 
+			// UseKeyButton
+			// 
+			this.UseKeyButton.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.UseKeyButton.Location = new System.Drawing.Point(219, 163);
+			this.UseKeyButton.Name = "UseKeyButton";
+			this.UseKeyButton.Size = new System.Drawing.Size(75, 21);
+			this.UseKeyButton.TabIndex = 52;
+			this.UseKeyButton.Text = "Change";
+			this.UseKeyButton.UseVisualStyleBackColor = true;
+			// 
+			// UseKeyBox
+			// 
+			this.UseKeyBox.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+			this.UseKeyBox.Location = new System.Drawing.Point(113, 163);
+			this.UseKeyBox.Name = "UseKeyBox";
+			this.UseKeyBox.ReadOnly = true;
+			this.UseKeyBox.Size = new System.Drawing.Size(100, 20);
+			this.UseKeyBox.TabIndex = 51;
+			this.UseKeyBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+			// 
+			// FormTooltip
+			// 
+			this.FormTooltip.IsBalloon = true;
+			this.FormTooltip.ShowAlways = true;
+			this.FormTooltip.StripAmpersands = true;
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.SystemColors.Window;
-			this.ClientSize = new System.Drawing.Size(304, 451);
+			this.ClientSize = new System.Drawing.Size(304, 474);
+			this.Controls.Add(this.UseKeyLabel);
+			this.Controls.Add(this.UseKeyButton);
+			this.Controls.Add(this.UseKeyBox);
 			this.Controls.Add(this.DoorShotLabel);
 			this.Controls.Add(this.DoorShotButton);
 			this.Controls.Add(this.DoorShotKeyBox);
@@ -671,8 +692,8 @@ namespace EasyEditUI
 			this.Controls.Add(this.FakeEditKeyBox);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MaximizeBox = false;
-			this.MaximumSize = new System.Drawing.Size(320, 490);
-			this.MinimumSize = new System.Drawing.Size(320, 490);
+			this.MaximumSize = new System.Drawing.Size(320, 513);
+			this.MinimumSize = new System.Drawing.Size(320, 513);
 			this.Name = "Form1";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Load += new System.EventHandler(this.Form1_Load);
@@ -686,7 +707,6 @@ namespace EasyEditUI
 		public System.Windows.Forms.TextBox FakeEditKeyBox;
 		private System.Windows.Forms.Button FakeEditKeyButton;
 		private System.Windows.Forms.Label FakeEditKeyLabel;
-		private System.Windows.Forms.ToolTip FakeEditKeyTooltip;
 		private System.Windows.Forms.Label RealEditKeyLabel;
 		private System.Windows.Forms.Button RealEditKeyButton;
 		public System.Windows.Forms.TextBox RealEditKeyBox;
@@ -735,6 +755,10 @@ namespace EasyEditUI
 		private System.Windows.Forms.Label FakeCrouchKeyLabel;
 		private System.Windows.Forms.Button FakeCrouchKeyButton;
 		public System.Windows.Forms.TextBox FakeCrouchKeyBox;
+		private System.Windows.Forms.Label UseKeyLabel;
+		private System.Windows.Forms.Button UseKeyButton;
+		public System.Windows.Forms.TextBox UseKeyBox;
+		private System.Windows.Forms.ToolTip FormTooltip;
 	}
 }
 

@@ -116,6 +116,10 @@ namespace EasyEditUI
 			{
 				Hotkey.SetDoorShotHotkey(vK);
 			}
+			else if(m_textBox == m_Parent.UseKeyBox)
+			{
+				Hotkey.SetUseHotkey(vK);
+			}
 
 			this.Close();
 		}
@@ -208,6 +212,10 @@ namespace EasyEditUI
 			else if (m_textBox == m_Parent.DoorShotKeyBox)
 			{
 				Hotkey.SetDoorShotHotkey(vK);
+			}
+			else if (m_textBox == m_Parent.UseKeyBox)
+			{
+				Hotkey.SetUseHotkey(vK);
 			}
 
 			this.Close();
