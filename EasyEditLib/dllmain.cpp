@@ -32,7 +32,6 @@ int g_FakeEditBind        = VK_LSHIFT;
 int g_RealEditBind        = 'L';
 int g_FakeCrouchBind      = VK_LCONTROL;
 int g_RealCrouchBind      = 'U';
-int g_DoorShotBind        = 'Y';
 int g_WallRetakeBind      = 'G';
 int g_ShotgunBind         = '3';
 int g_UseBind             = 'E';
@@ -59,7 +58,6 @@ extern "C"
 		g_RealEditBind           = g_Config->FindValue("RealEdit");
 		g_FakeCrouchBind		 = g_Config->FindValue("FakeCrouch");
 		g_RealCrouchBind		 = g_Config->FindValue("RealCrouch");
-		g_DoorShotBind			 = g_Config->FindValue("DoorShot");
 		g_UseBind                = g_Config->FindValue("Use");
 		g_WallRetakeBind         = g_Config->FindValue("WallRetake");
 		g_ShotgunBind            = g_Config->FindValue("Shotgun");
@@ -188,17 +186,6 @@ extern "C"
 		return g_RealCrouchBind;
 	}
 
-	DllExport void SetDoorShotHotkey(int vk)
-	{
-		g_Config->SetValue("DoorShot", vk);
-		g_DoorShotBind = vk;
-	}
-
-	DllExport int GetDoorShotHotkey()
-	{
-		return g_DoorShotBind;
-	}
-
 	DllExport void SetWallRetakeHotkey(int vk)
 	{
 		g_Config->SetValue("WallRetake", vk);
@@ -311,44 +298,6 @@ extern "C"
 		}
 	}
 
-	DllExport void DoorShotT()
-	{
-		srand(time(NULL));
-
-		bool bPressedKey = false;
-
-		while (true)
-		{
-			if (g_IsGameUp)
-			{
-				if (bPressedKey == false && GetAsyncKeyState(g_DoorShotBind))
-				{
-					bPressedKey = true;
-
-					Keyboard::HoldKey(g_UseBind);
-					Sleep((rand() % 15));
-					Mouse::RightClickHold();
-					Sleep((rand() % 15) + 10);
-					Mouse::LeftClick((rand() % 15) + 10);
-					Sleep((rand() % 15));
-					Mouse::RightClickRelease();
-					Sleep((rand() % 15));
-					Keyboard::ReleaseKey(g_UseBind);
-				}
-				else if (bPressedKey == true && !GetAsyncKeyState(g_DoorShotBind))
-				{
-					bPressedKey = false;
-				}
-
-				Sleep(1);
-			}
-			else
-			{
-				Sleep(100);
-			}
-		}
-	}
-
 	DllExport void CrouchT()
 	{
 		srand(time(NULL));
@@ -370,7 +319,6 @@ extern "C"
 					bIsCrouchKeyPressed = false;
 
 					Keyboard::PressKey(g_RealCrouchBind, (rand() % 15) + 15); // End crouch
-
 				}
 
 				Sleep(1);
@@ -386,6 +334,14 @@ extern "C"
 	{
 		while (true)
 		{
+			#ifdef NDEBUG
+			if (IsDebuggerPresent())
+			{
+				g_IsGameUp = false;
+				return;
+			}
+			#endif
+				
 			HWND fw = GetForegroundWindow();
 			char sTitle[64];
 

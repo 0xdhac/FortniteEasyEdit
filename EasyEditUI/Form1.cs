@@ -1,13 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Threading;
 
 namespace EasyEditUI
 {
@@ -16,137 +8,139 @@ namespace EasyEditUI
 		public Form1()
 		{
 			InitializeComponent();
+			FormClosing += Form1_Closing;
+			FormBorderStyle = FormBorderStyle.FixedSingle;
+			MaximizeBox = false;
+			Select();
+		}
+
+		private void Form1_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+		{
+			Application.Exit();
 		}
 
 		private void Form1_Load(object sender, EventArgs e)
 		{
-			this.FakeEditKeyButton.Click	+= new System.EventHandler(this.FakeEditKeyButton_Click);
-			this.RealEditKeyButton.Click	+= new System.EventHandler(this.RealEditKeyButton_Click);
-			this.WallRetakeKeyButton.Click	+= new System.EventHandler(this.WallRetakeKeyButton_Click);
-			this.ShotgunKeyButton.Click		+= new System.EventHandler(this.ShotgunKeyButton_Click);
-			this.WallKeyButton.Click		+= new System.EventHandler(this.WallKeyButton_Click);
-			this.FloorKeyButton.Click		+= new System.EventHandler(this.FloorKeyButton_Click);
-			this.StairKeyButton.Click		+= new System.EventHandler(this.StairKeyButton_Click);
-			this.ConeKeyButton.Click		+= new System.EventHandler(this.ConeKeyButton_Click);
-			this.PickaxeKeyButton.Click		+= new System.EventHandler(this.PickaxeKeyButton_Click);
-			this.Weapon1KeyButton.Click		+= new System.EventHandler(this.Weapon1KeyButton_Click);
-			this.Weapon2KeyButton.Click		+= new System.EventHandler(this.Weapon2KeyButton_Click);
-			this.Weapon3KeyButton.Click		+= new System.EventHandler(this.Weapon3KeyButton_Click);
-			this.Weapon4KeyButton.Click		+= new System.EventHandler(this.Weapon4KeyButton_Click);
-			this.Weapon5KeyButton.Click		+= new System.EventHandler(this.Weapon5KeyButton_Click);
-			this.DoorShotButton.Click		+= new System.EventHandler(this.DoorShotButton_Click);
-			this.RealCrouchKeyButton.Click	+= new System.EventHandler(this.RealCrouchButton_Click);
-			this.FakeCrouchKeyButton.Click	+= new System.EventHandler(this.FakeCrouchButton_Click);
-			this.UseKeyButton.Click			+= new System.EventHandler(this.UseKeyButton_Click);
+			FakeEditKeyButton.Click		+= new System.EventHandler(FakeEditKeyButton_Click);
+			RealEditKeyButton.Click		+= new System.EventHandler(RealEditKeyButton_Click);
+			WallRetakeKeyButton.Click	+= new System.EventHandler(WallRetakeKeyButton_Click);
+			ShotgunKeyButton.Click		+= new System.EventHandler(ShotgunKeyButton_Click);
+			WallKeyButton.Click			+= new System.EventHandler(WallKeyButton_Click);
+			FloorKeyButton.Click		+= new System.EventHandler(FloorKeyButton_Click);
+			StairKeyButton.Click		+= new System.EventHandler(StairKeyButton_Click);
+			ConeKeyButton.Click			+= new System.EventHandler(ConeKeyButton_Click);
+			PickaxeKeyButton.Click		+= new System.EventHandler(PickaxeKeyButton_Click);
+			Weapon1KeyButton.Click		+= new System.EventHandler(Weapon1KeyButton_Click);
+			Weapon2KeyButton.Click		+= new System.EventHandler(Weapon2KeyButton_Click);
+			Weapon3KeyButton.Click		+= new System.EventHandler(Weapon3KeyButton_Click);
+			Weapon4KeyButton.Click		+= new System.EventHandler(Weapon4KeyButton_Click);
+			Weapon5KeyButton.Click		+= new System.EventHandler(Weapon5KeyButton_Click);
+			RealCrouchKeyButton.Click	+= new System.EventHandler(RealCrouchButton_Click);
+			FakeCrouchKeyButton.Click	+= new System.EventHandler(FakeCrouchButton_Click);
+			UseKeyButton.Click			+= new System.EventHandler(UseKeyButton_Click);
 
-			this.FakeEditKeyBox.Text   = Hotkey.GetHotkeyName(Hotkey.GetFakeEditHotkey());
-			this.RealEditKeyBox.Text   = Hotkey.GetHotkeyName(Hotkey.GetRealEditHotkey());
-			this.FakeCrouchKeyBox.Text = Hotkey.GetHotkeyName(Hotkey.GetFakeCrouchHotkey());
-			this.RealCrouchKeyBox.Text = Hotkey.GetHotkeyName(Hotkey.GetRealCrouchHotkey());
-			this.DoorShotKeyBox.Text   = Hotkey.GetHotkeyName(Hotkey.GetDoorShotHotkey());
-			this.WallRetakeKeyBox.Text = Hotkey.GetHotkeyName(Hotkey.GetWallRetakeHotkey());
-			this.ShotgunKeyBox.Text    = Hotkey.GetHotkeyName(Hotkey.GetShotgunHotkey());
-			this.WallKeyBox.Text       = Hotkey.GetHotkeyName(Hotkey.GetBuildHotkey((int)Hotkey.BuildType.Build_Wall));
-			this.FloorKeyBox.Text      = Hotkey.GetHotkeyName(Hotkey.GetBuildHotkey((int)Hotkey.BuildType.Build_Floor));
-			this.StairKeyBox.Text      = Hotkey.GetHotkeyName(Hotkey.GetBuildHotkey((int)Hotkey.BuildType.Build_Stair));
-			this.ConeKeyBox.Text       = Hotkey.GetHotkeyName(Hotkey.GetBuildHotkey((int)Hotkey.BuildType.Build_Cone));
-			this.PickaxeKeyBox.Text    = Hotkey.GetHotkeyName(Hotkey.GetWeaponHotkey(0));
-			this.Weapon1KeyBox.Text    = Hotkey.GetHotkeyName(Hotkey.GetWeaponHotkey(1));
-			this.Weapon2KeyBox.Text    = Hotkey.GetHotkeyName(Hotkey.GetWeaponHotkey(2));
-			this.Weapon3KeyBox.Text    = Hotkey.GetHotkeyName(Hotkey.GetWeaponHotkey(3));
-			this.Weapon4KeyBox.Text    = Hotkey.GetHotkeyName(Hotkey.GetWeaponHotkey(4));
-			this.Weapon5KeyBox.Text    = Hotkey.GetHotkeyName(Hotkey.GetWeaponHotkey(5));
-			this.UseKeyBox.Text        = Hotkey.GetHotkeyName(Hotkey.GetUseHotkey());
-		}
-
-		private void DoorShotButton_Click(object sender, EventArgs e)
-		{
-			new KeyListenForm(this, this.DoorShotKeyBox);
+			FakeEditKeyBox.Text   = Hotkey.GetHotkeyName(Hotkey.GetFakeEditHotkey());
+			RealEditKeyBox.Text   = Hotkey.GetHotkeyName(Hotkey.GetRealEditHotkey());
+			FakeCrouchKeyBox.Text = Hotkey.GetHotkeyName(Hotkey.GetFakeCrouchHotkey());
+			RealCrouchKeyBox.Text = Hotkey.GetHotkeyName(Hotkey.GetRealCrouchHotkey());
+			WallRetakeKeyBox.Text = Hotkey.GetHotkeyName(Hotkey.GetWallRetakeHotkey());
+			ShotgunKeyBox.Text    = Hotkey.GetHotkeyName(Hotkey.GetShotgunHotkey());
+			WallKeyBox.Text       = Hotkey.GetHotkeyName(Hotkey.GetBuildHotkey((int)Hotkey.BuildType.Build_Wall));
+			FloorKeyBox.Text      = Hotkey.GetHotkeyName(Hotkey.GetBuildHotkey((int)Hotkey.BuildType.Build_Floor));
+			StairKeyBox.Text      = Hotkey.GetHotkeyName(Hotkey.GetBuildHotkey((int)Hotkey.BuildType.Build_Stair));
+			ConeKeyBox.Text       = Hotkey.GetHotkeyName(Hotkey.GetBuildHotkey((int)Hotkey.BuildType.Build_Cone));
+			PickaxeKeyBox.Text    = Hotkey.GetHotkeyName(Hotkey.GetWeaponHotkey(0));
+			Weapon1KeyBox.Text    = Hotkey.GetHotkeyName(Hotkey.GetWeaponHotkey(1));
+			Weapon2KeyBox.Text    = Hotkey.GetHotkeyName(Hotkey.GetWeaponHotkey(2));
+			Weapon3KeyBox.Text    = Hotkey.GetHotkeyName(Hotkey.GetWeaponHotkey(3));
+			Weapon4KeyBox.Text    = Hotkey.GetHotkeyName(Hotkey.GetWeaponHotkey(4));
+			Weapon5KeyBox.Text    = Hotkey.GetHotkeyName(Hotkey.GetWeaponHotkey(5));
+			UseKeyBox.Text        = Hotkey.GetHotkeyName(Hotkey.GetUseHotkey());
 		}
 
 		private void RealCrouchButton_Click(object sender, EventArgs e)
 		{
-			new KeyListenForm(this, this.RealCrouchKeyBox);
+			new KeyListenForm(this, RealCrouchKeyBox);
 		}
 
 		private void FakeCrouchButton_Click(object sender, EventArgs e)
 		{
-			new KeyListenForm(this, this.FakeCrouchKeyBox);
+			new KeyListenForm(this, FakeCrouchKeyBox);
 		}
 
 		private void UseKeyButton_Click(object sender, EventArgs e)
 		{
-			new KeyListenForm(this, this.UseKeyBox);
+			new KeyListenForm(this, UseKeyBox);
 		}
 
 		private void FakeEditKeyButton_Click(object sender, EventArgs e)
 		{
-			new KeyListenForm(this, this.FakeEditKeyBox);
+			new KeyListenForm(this, FakeEditKeyBox);
 		}
 
 		private void RealEditKeyButton_Click(object sender, EventArgs e)
 		{
-			new KeyListenForm(this, this.RealEditKeyBox);
+			new KeyListenForm(this, RealEditKeyBox);
 		}
 
 		private void WallRetakeKeyButton_Click(object sender, EventArgs e)
 		{
-			new KeyListenForm(this, this.WallRetakeKeyBox);
+			new KeyListenForm(this, WallRetakeKeyBox);
 		}
 
 		private void ShotgunKeyButton_Click(object sender, EventArgs e)
 		{
-			new KeyListenForm(this, this.ShotgunKeyBox);
+			new KeyListenForm(this, ShotgunKeyBox);
 		}
 
 		private void WallKeyButton_Click(object sender, EventArgs e)
 		{
-			new KeyListenForm(this, this.WallKeyBox);
+			new KeyListenForm(this, WallKeyBox);
 		}
 
 		private void FloorKeyButton_Click(object sender, EventArgs e)
 		{
-			new KeyListenForm(this, this.FloorKeyBox);
+			new KeyListenForm(this, FloorKeyBox);
 		}
 
 		private void StairKeyButton_Click(object sender, EventArgs e)
 		{
-			new KeyListenForm(this, this.StairKeyBox);
+			new KeyListenForm(this, StairKeyBox);
 		}
 
 		private void ConeKeyButton_Click(object sender, EventArgs e)
 		{
-			new KeyListenForm(this, this.ConeKeyBox);
+			new KeyListenForm(this, ConeKeyBox);
 		}
 
 		private void PickaxeKeyButton_Click(object sender, EventArgs e)
 		{
-			new KeyListenForm(this, this.PickaxeKeyBox);
+			new KeyListenForm(this, PickaxeKeyBox);
 		}
 
 		private void Weapon1KeyButton_Click(object sender, EventArgs e)
 		{
-			new KeyListenForm(this, this.Weapon1KeyBox);
+			new KeyListenForm(this, Weapon1KeyBox);
 		}
 
 		private void Weapon2KeyButton_Click(object sender, EventArgs e)
 		{
-			new KeyListenForm(this, this.Weapon2KeyBox);
+			new KeyListenForm(this, Weapon2KeyBox);
 		}
 
 		private void Weapon3KeyButton_Click(object sender, EventArgs e)
 		{
-			new KeyListenForm(this, this.Weapon3KeyBox);
+			new KeyListenForm(this, Weapon3KeyBox);
 		}
 
 		private void Weapon4KeyButton_Click(object sender, EventArgs e)
 		{
-			new KeyListenForm(this, this.Weapon4KeyBox);
+			new KeyListenForm(this, Weapon4KeyBox);
 		}
 
 		private void Weapon5KeyButton_Click(object sender, EventArgs e)
 		{
-			new KeyListenForm(this, this.Weapon5KeyBox);
+			new KeyListenForm(this, Weapon5KeyBox);
 		}
 	}
 }

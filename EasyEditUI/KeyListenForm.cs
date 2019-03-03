@@ -12,9 +12,11 @@ namespace EasyEditUI
 			m_textBox = t;
 			m_Parent = f;
 			InitializeComponent();
-			this.KeyDown   += KeyListenForm_KeyPress;
-			this.MouseDown += KeyListenForm_MouseDown;
-			this.ShowDialog();
+			KeyDown   += KeyListenForm_KeyPress;
+			MouseDown += KeyListenForm_MouseDown;
+			ShowDialog();
+			FormBorderStyle = FormBorderStyle.FixedSingle;
+			MaximizeBox = false;
 		}
 
 		public void KeyListenForm_KeyPress(object sender, KeyEventArgs e)
@@ -112,10 +114,6 @@ namespace EasyEditUI
 			{
 				Hotkey.SetRealCrouchHotkey(vK);
 			}
-			else if (m_textBox == m_Parent.DoorShotKeyBox)
-			{
-				Hotkey.SetDoorShotHotkey(vK);
-			}
 			else if(m_textBox == m_Parent.UseKeyBox)
 			{
 				Hotkey.SetUseHotkey(vK);
@@ -208,10 +206,6 @@ namespace EasyEditUI
 			else if (m_textBox == m_Parent.RealCrouchKeyBox)
 			{
 				Hotkey.SetRealCrouchHotkey(vK);
-			}
-			else if (m_textBox == m_Parent.DoorShotKeyBox)
-			{
-				Hotkey.SetDoorShotHotkey(vK);
 			}
 			else if (m_textBox == m_Parent.UseKeyBox)
 			{
