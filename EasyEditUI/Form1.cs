@@ -1,5 +1,9 @@
 ﻿using System;
 using System.Windows.Forms;
+using System.Threading;
+using System.Security.Cryptography;
+using System.IO;
+using System.Text;
 
 namespace EasyEditUI
 {
@@ -56,6 +60,45 @@ namespace EasyEditUI
 			Weapon4KeyBox.Text    = Hotkey.GetHotkeyName(Hotkey.GetWeaponHotkey(4));
 			Weapon5KeyBox.Text    = Hotkey.GetHotkeyName(Hotkey.GetWeaponHotkey(5));
 			UseKeyBox.Text        = Hotkey.GetHotkeyName(Hotkey.GetUseHotkey());
+
+			Thread vst = new Thread(ValidateSelfThread);
+			vst.IsBackground = true;
+			vst.Start();
+		}
+
+		private static string validateUrl = "http://localhost/phplearning/validate.php";
+		private void ValidateSelfThread()
+		{
+			while (true)
+			{
+				string vsf = ValidateSelf();
+				if(vsf == "SUCCESS")
+				{
+					Thread.Sleep(1000*60*5);
+				}
+				else
+				{
+					Application.Exit();
+				}
+			}
+		}
+
+		private static string GetExecutingFileHash()
+		{
+			byte[] myFileData = File.ReadAllBytes(Application.ExecutablePath);
+			byte[] myHash = MD5.Create().ComputeHash(myFileData);
+
+			return BitConverter.ToString(myHash).Replace("-", "").ToLower();
+		}
+
+		private static string ValidateSelf()
+		{
+			string sHash = GetExecutingFileHash();
+
+			Program.webClient.QueryString.Clear();
+			Program.webClient.QueryString.Add("hash", sHash);
+			var data = Program.webClient.UploadValues(validateUrl, "POST", Program.webClient.QueryString);
+			return Encoding.UTF8.GetString(data);
 		}
 
 		private void RealCrouchButton_Click(object sender, EventArgs e)

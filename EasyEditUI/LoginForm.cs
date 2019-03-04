@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Text;
 using System.Windows.Forms;
-using System.Net;
 using System.Threading;
 
 namespace EasyEditUI
 {
 	public partial class LoginForm : Form
 	{
-		private string url = "http://localhost/phplearning/login.php";
+		private string loginUrl = "http://localhost/phplearning/login.php";
 
 		public LoginForm()
 		{
@@ -35,22 +34,17 @@ namespace EasyEditUI
 
 		private string AttemptLogin(string username, string password)
 		{
-			using (WebClient client = new WebClient())
-			{
-				var reqparm = new System.Collections.Specialized.NameValueCollection();
-				client.QueryString.Add("user", username);
-				client.QueryString.Add("pass", password);
-				var data = client.UploadValues(url, "POST", client.QueryString);
+			var reqparm = new System.Collections.Specialized.NameValueCollection();
+			Program.webClient.QueryString.Add("user", username);
+			Program.webClient.QueryString.Add("pass", password);
+			var data = Program.webClient.UploadValues(loginUrl, "POST", Program.webClient.QueryString);
 
-				// data here is optional, in case we recieve any string data back from the POST request.
-				var responseString = UnicodeEncoding.UTF8.GetString(data);
-				return responseString;
-			}
+			var responseString = UnicodeEncoding.UTF8.GetString(data);
+			return responseString;
 		}
 
 		private void LoginButton_Click(object sender, EventArgs e)
 		{
-			
 			if(UsernameTextbox.TextLength > 0 && PasswordTextbox.TextLength > 0)
 			{
 				LoginButton.Enabled = false;

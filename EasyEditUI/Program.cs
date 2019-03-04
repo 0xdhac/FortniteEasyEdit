@@ -4,11 +4,13 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Diagnostics;
+using System.Net;
 
 namespace EasyEditUI
 {
 	class Program
 	{
+		public static CookedWebClient webClient;
 		[STAThread]
 		static void Main()
 		{
@@ -17,9 +19,26 @@ namespace EasyEditUI
 				return;
 			#endif
 
+			webClient = new CookedWebClient();
+			webClient.Headers.Add("user-agent", "EasyEdit");
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new LoginForm());
+		}
+	}
+
+	public class CookedWebClient : WebClient
+	{
+		public CookieContainer Cookies { get; } = new CookieContainer();
+
+		protected override WebRequest GetWebRequest(Uri address)
+		{
+			WebRequest request = base.GetWebRequest(address);
+
+			if (request.GetType() == typeof(HttpWebRequest))
+				((HttpWebRequest)request).CookieContainer = Cookies;
+
+			return request;
 		}
 	}
 

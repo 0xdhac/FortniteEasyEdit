@@ -34,12 +34,12 @@
 			this.PasswordLabel = new System.Windows.Forms.Label();
 			this.UsernameTextbox = new System.Windows.Forms.TextBox();
 			this.PasswordTextbox = new System.Windows.Forms.TextBox();
-			this.AuthorLabel = new System.Windows.Forms.Label();
+			this.label1 = new System.Windows.Forms.Label();
 			this.SuspendLayout();
 			// 
 			// LoginButton
 			// 
-			this.LoginButton.Location = new System.Drawing.Point(87, 81);
+			this.LoginButton.Location = new System.Drawing.Point(136, 63);
 			this.LoginButton.Name = "LoginButton";
 			this.LoginButton.Size = new System.Drawing.Size(75, 23);
 			this.LoginButton.TabIndex = 0;
@@ -50,53 +50,53 @@
 			// UsernameLabel
 			// 
 			this.UsernameLabel.AutoSize = true;
-			this.UsernameLabel.Location = new System.Drawing.Point(45, 32);
+			this.UsernameLabel.Location = new System.Drawing.Point(94, 14);
 			this.UsernameLabel.Name = "UsernameLabel";
-			this.UsernameLabel.Size = new System.Drawing.Size(55, 13);
+			this.UsernameLabel.Size = new System.Drawing.Size(58, 13);
 			this.UsernameLabel.TabIndex = 1;
-			this.UsernameLabel.Text = "Username";
+			this.UsernameLabel.Text = "Username:";
 			// 
 			// PasswordLabel
 			// 
 			this.PasswordLabel.AutoSize = true;
-			this.PasswordLabel.Location = new System.Drawing.Point(47, 58);
+			this.PasswordLabel.Location = new System.Drawing.Point(96, 40);
 			this.PasswordLabel.Name = "PasswordLabel";
-			this.PasswordLabel.Size = new System.Drawing.Size(53, 13);
+			this.PasswordLabel.Size = new System.Drawing.Size(56, 13);
 			this.PasswordLabel.TabIndex = 2;
-			this.PasswordLabel.Text = "Password";
+			this.PasswordLabel.Text = "Password:";
 			// 
 			// UsernameTextbox
 			// 
-			this.UsernameTextbox.Location = new System.Drawing.Point(105, 29);
+			this.UsernameTextbox.Location = new System.Drawing.Point(154, 11);
 			this.UsernameTextbox.Name = "UsernameTextbox";
 			this.UsernameTextbox.Size = new System.Drawing.Size(100, 20);
 			this.UsernameTextbox.TabIndex = 3;
 			// 
 			// PasswordTextbox
 			// 
-			this.PasswordTextbox.Location = new System.Drawing.Point(105, 55);
+			this.PasswordTextbox.Location = new System.Drawing.Point(154, 37);
 			this.PasswordTextbox.Name = "PasswordTextbox";
 			this.PasswordTextbox.PasswordChar = '•';
 			this.PasswordTextbox.Size = new System.Drawing.Size(100, 20);
 			this.PasswordTextbox.TabIndex = 4;
 			this.PasswordTextbox.UseSystemPasswordChar = true;
 			// 
-			// AuthorLabel
+			// label1
 			// 
-			this.AuthorLabel.AutoSize = true;
-			this.AuthorLabel.Location = new System.Drawing.Point(45, 107);
-			this.AuthorLabel.Name = "AuthorLabel";
-			this.AuthorLabel.Size = new System.Drawing.Size(165, 13);
-			this.AuthorLabel.TabIndex = 5;
-			this.AuthorLabel.Text = "Created by 0xD#0057 on Discord";
+			this.label1.AutoSize = true;
+			this.label1.Location = new System.Drawing.Point(12, 90);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(334, 13);
+			this.label1.TabIndex = 6;
+			this.label1.Text = "If you\'ve lost your account information, contact 0xD#0057 on Discord";
 			// 
 			// LoginForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.AutoSize = true;
-			this.ClientSize = new System.Drawing.Size(250, 154);
-			this.Controls.Add(this.AuthorLabel);
+			this.ClientSize = new System.Drawing.Size(355, 107);
+			this.Controls.Add(this.label1);
 			this.Controls.Add(this.PasswordTextbox);
 			this.Controls.Add(this.UsernameTextbox);
 			this.Controls.Add(this.PasswordLabel);
@@ -117,6 +117,6 @@
 		private System.Windows.Forms.Label PasswordLabel;
 		private System.Windows.Forms.TextBox UsernameTextbox;
 		private System.Windows.Forms.TextBox PasswordTextbox;
-		private System.Windows.Forms.Label AuthorLabel;
+		private System.Windows.Forms.Label label1;
 	}
 }

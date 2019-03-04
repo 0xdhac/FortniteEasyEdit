@@ -119,7 +119,7 @@ namespace EasyEditUI
 				Hotkey.SetUseHotkey(vK);
 			}
 
-			this.Close();
+			Close();
 		}
 
 		private void KeyListenForm_MouseDown(object sender, MouseEventArgs e)
@@ -212,7 +212,7 @@ namespace EasyEditUI
 				Hotkey.SetUseHotkey(vK);
 			}
 
-			this.Close();
+			Close();
 		}
 	}
 }
