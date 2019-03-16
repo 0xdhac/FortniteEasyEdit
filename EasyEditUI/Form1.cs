@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Threading;
-using System.Security.Cryptography;
-using System.IO;
+
 using System.Text;
 
 namespace EasyEditUI
@@ -61,39 +60,23 @@ namespace EasyEditUI
 			Weapon5KeyBox.Text    = Hotkey.GetHotkeyName(Hotkey.GetWeaponHotkey(5));
 			UseKeyBox.Text        = Hotkey.GetHotkeyName(Hotkey.GetUseHotkey());
 
-			Thread vst = new Thread(ValidateSelfThread);
-			vst.IsBackground = true;
-			vst.Start();
+			#if !NOVERIFY
+			new Thread(ValidateSelfThread).Start();
+			#endif
 		}
 
-		private static string validateUrl = "http://localhost/phplearning/validate.php";
+		private static string validateUrl = "http://oxdmacro.site.nfoservers.com/validate.php";
 		private void ValidateSelfThread()
 		{
-			while (true)
+			if (ValidateSelf() != "SUCCESS")
 			{
-				string vsf = ValidateSelf();
-				if(vsf == "SUCCESS")
-				{
-					Thread.Sleep(1000*60*5);
-				}
-				else
-				{
-					Application.Exit();
-				}
+				Application.Exit();
 			}
-		}
-
-		private static string GetExecutingFileHash()
-		{
-			byte[] myFileData = File.ReadAllBytes(Application.ExecutablePath);
-			byte[] myHash = MD5.Create().ComputeHash(myFileData);
-
-			return BitConverter.ToString(myHash).Replace("-", "").ToLower();
 		}
 
 		private static string ValidateSelf()
 		{
-			string sHash = GetExecutingFileHash();
+			string sHash = Program.GetExecutingFileHash();
 
 			Program.webClient.QueryString.Clear();
 			Program.webClient.QueryString.Add("hash", sHash);

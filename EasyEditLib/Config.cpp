@@ -4,12 +4,15 @@
 #include <Windows.h>
 #include <vector>
 
+std::string Config::m_Path;
+std::fstream Config::m_File;
+bool Config::failed;
+
 Config::Config(std::string file)
 {
 	char dirPath[512];
 	GetCurrentDirectoryA(512, dirPath);
 
-	char baskSlash[2] = "\\";
 	m_Path = dirPath + std::string("\\") + file;
 
 	struct stat buffer;

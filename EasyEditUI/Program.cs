@@ -5,6 +5,8 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Diagnostics;
 using System.Net;
+using System.Security.Cryptography;
+using System.IO;
 
 namespace EasyEditUI
 {
@@ -24,6 +26,21 @@ namespace EasyEditUI
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new LoginForm());
+		}
+
+		public static string GetSelfVersion()
+		{
+			FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(Application.ExecutablePath);
+			string version = fileVersionInfo.ProductVersion;
+			return version;
+		}
+
+		public static string GetExecutingFileHash()
+		{
+			byte[] myFileData = File.ReadAllBytes(Application.ExecutablePath);
+			byte[] myHash = MD5.Create().ComputeHash(myFileData);
+
+			return BitConverter.ToString(myHash).Replace("-", "").ToLower();
 		}
 	}
 
@@ -235,6 +252,8 @@ namespace EasyEditUI
 			KeyboardMap.Add(new Pair<int, string>(0xdd, "]"));
 			KeyboardMap.Add(new Pair<int, string>(0xde, "'"));
 			KeyboardMap.Add(new Pair<int, string>(0xe2, "\\"));
+			KeyboardMap.Add(new Pair<int, string>(0xff, "MWHEELUP"));
+			KeyboardMap.Add(new Pair<int, string>(0xfe, "MWHEELDOWN"));
 		}
 
 		public static string GetHotkeyName(int vk)

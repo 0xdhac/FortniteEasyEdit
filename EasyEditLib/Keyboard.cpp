@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Keyboard.h"
+#include "Mouse.h"
 
 void Keyboard::HoldKey(DWORD key)
 {
@@ -33,10 +34,17 @@ void Keyboard::ReleaseKey(DWORD key)
 
 void Keyboard::PressKey(DWORD key, DWORD holdDelayMS)
 {
-	HoldKey(key);
+	if (key == 0xfe || key == 0xff) // Scroll wheel, 0xfe and 0xff are made up values
+	{
+		Mouse::Scroll(key == 0xff ? true : false);
+	}
+	else
+	{
+		HoldKey(key);
 
-	if (holdDelayMS)
-		Sleep(holdDelayMS);
+		if (holdDelayMS)
+			Sleep(holdDelayMS);
 
-	ReleaseKey(key);
+		ReleaseKey(key);
+	}
 }

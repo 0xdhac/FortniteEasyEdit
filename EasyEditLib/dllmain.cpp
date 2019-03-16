@@ -3,6 +3,8 @@
 #include "Mouse.h"
 #include "Keyboard.h"
 #include "Config.h"
+#include "Binds.h"
+#include <fstream>
 
 enum BuildType
 {
@@ -48,29 +50,68 @@ int g_WeaponList[] =
 
 Config* g_Config;
 
+HHOOK hMouseHook;
+HHOOK hKeyboardHook;
+
+LRESULT CALLBACK mouseProc(int nCode, WPARAM wParam, LPARAM lParam)
+{
+	if (nCode >= 0)
+	{
+		switch (wParam)
+		{
+		case WM_LBUTTONDOWN:
+			
+			break;
+
+		case WM_LBUTTONUP:
+			
+			break;
+		}
+	}
+
+	return CallNextHookEx(hMouseHook, nCode, wParam, lParam);
+}
+
+LRESULT CALLBACK keyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
+{
+	switch (wParam)
+	{
+	case WM_KEYDOWN:
+		KBDLLHOOKSTRUCT k = *(LPKBDLLHOOKSTRUCT)lParam;
+		
+		break;
+	}
+
+	return CallNextHookEx(hKeyboardHook, nCode, wParam, lParam);
+}
+
 extern "C"
 {
 	DllExport void InitConfig()
 	{
-		g_Config = new Config("config.cfg");
+		
+		Config("config.cfg");
 
-		g_FakeEditBind           = g_Config->FindValue("FakeEdit");
-		g_RealEditBind           = g_Config->FindValue("RealEdit");
-		g_FakeCrouchBind		 = g_Config->FindValue("FakeCrouch");
-		g_RealCrouchBind		 = g_Config->FindValue("RealCrouch");
-		g_UseBind                = g_Config->FindValue("Use");
-		g_WallRetakeBind         = g_Config->FindValue("WallRetake");
-		g_ShotgunBind            = g_Config->FindValue("Shotgun");
-		g_BuildList[Build_Floor] = g_Config->FindValue("Floor");
-		g_BuildList[Build_Stair] = g_Config->FindValue("Stair");
-		g_BuildList[Build_Cone]  = g_Config->FindValue("Cone");
-		g_BuildList[Build_Wall]  = g_Config->FindValue("Wall");
-		g_WeaponList[0]          = g_Config->FindValue("Weapon1");
-		g_WeaponList[1]          = g_Config->FindValue("Weapon2");
-		g_WeaponList[2]          = g_Config->FindValue("Weapon3");
-		g_WeaponList[3]          = g_Config->FindValue("Weapon4");
-		g_WeaponList[4]          = g_Config->FindValue("Weapon5");
-		g_WeaponList[5]          = g_Config->FindValue("Weapon6");
+		g_FakeEditBind           = Config::FindValue("FakeEdit");
+		g_RealEditBind           = Config::FindValue("RealEdit");
+		g_FakeCrouchBind		 = Config::FindValue("FakeCrouch");
+		g_RealCrouchBind		 = Config::FindValue("RealCrouch");
+		g_UseBind                = Config::FindValue("Use");
+		g_WallRetakeBind         = Config::FindValue("WallRetake");
+		g_ShotgunBind            = Config::FindValue("Shotgun");
+		g_BuildList[Build_Floor] = Config::FindValue("Floor");
+		g_BuildList[Build_Stair] = Config::FindValue("Stair");
+		g_BuildList[Build_Cone]  = Config::FindValue("Cone");
+		g_BuildList[Build_Wall]  = Config::FindValue("Wall");
+		g_WeaponList[0]          = Config::FindValue("Weapon1");
+		g_WeaponList[1]          = Config::FindValue("Weapon2");
+		g_WeaponList[2]          = Config::FindValue("Weapon3");
+		g_WeaponList[3]          = Config::FindValue("Weapon4");
+		g_WeaponList[4]          = Config::FindValue("Weapon5");
+		g_WeaponList[5]          = Config::FindValue("Weapon6");
+
+		hMouseHook    = SetWindowsHookEx(WH_MOUSE_LL, mouseProc, NULL, 0);
+		hKeyboardHook = SetWindowsHookEx(WH_KEYBOARD_LL, keyboardProc, NULL, 0);
 	}
 
 	DllExport void SetWeaponHotkey(int index, int vk)
@@ -80,22 +121,22 @@ extern "C"
 		switch(index)
 		{
 		case 0:
-			g_Config->SetValue("Weapon1", vk);
+			Config::SetValue("Weapon1", vk);
 			break;
 		case 1:
-			g_Config->SetValue("Weapon2", vk);
+			Config::SetValue("Weapon2", vk);
 			break;
 		case 2:
-			g_Config->SetValue("Weapon3", vk);
+			Config::SetValue("Weapon3", vk);
 			break;
 		case 3:
-			g_Config->SetValue("Weapon4", vk);
+			Config::SetValue("Weapon4", vk);
 			break;
 		case 4:
-			g_Config->SetValue("Weapon5", vk);
+			Config::SetValue("Weapon5", vk);
 			break;
 		case 5:
-			g_Config->SetValue("Weapon6", vk);
+			Config::SetValue("Weapon6", vk);
 			break;
 		}
 	}
@@ -112,16 +153,16 @@ extern "C"
 		switch (index)
 		{
 		case Build_Floor:
-			g_Config->SetValue("Floor", vk);
+			Config::SetValue("Floor", vk);
 			break;
 		case Build_Stair:
-			g_Config->SetValue("Stair", vk);
+			Config::SetValue("Stair", vk);
 			break;
 		case Build_Cone:
-			g_Config->SetValue("Cone", vk);
+			Config::SetValue("Cone", vk);
 			break;
 		case Build_Wall:
-			g_Config->SetValue("Wall", vk);
+			Config::SetValue("Wall", vk);
 			break;
 		}
 	}
@@ -133,7 +174,7 @@ extern "C"
 
 	DllExport void SetFakeEditHotkey(int vk)
 	{
-		g_Config->SetValue("FakeEdit", vk);
+		Config::SetValue("FakeEdit", vk);
 		g_FakeEditBind = vk;
 	}
 
@@ -144,7 +185,7 @@ extern "C"
 
 	DllExport void SetUseHotkey(int vk)
 	{
-		g_Config->SetValue("Use", vk);
+		Config::SetValue("Use", vk);
 		g_UseBind = vk;
 	}
 
@@ -155,7 +196,7 @@ extern "C"
 
 	DllExport void SetRealEditHotkey(int vk)
 	{
-		g_Config->SetValue("RealEdit", vk);
+		Config::SetValue("RealEdit", vk);
 		g_RealEditBind = vk;
 	}
 
@@ -166,7 +207,7 @@ extern "C"
 
 	DllExport void SetFakeCrouchHotkey(int vk)
 	{
-		g_Config->SetValue("FakeCrouch", vk);
+		Config::SetValue("FakeCrouch", vk);
 		g_FakeCrouchBind = vk;
 	}
 
@@ -177,7 +218,7 @@ extern "C"
 
 	DllExport void SetRealCrouchHotkey(int vk)
 	{
-		g_Config->SetValue("RealCrouch", vk);
+		Config::SetValue("RealCrouch", vk);
 		g_RealCrouchBind = vk;
 	}
 
@@ -188,7 +229,7 @@ extern "C"
 
 	DllExport void SetWallRetakeHotkey(int vk)
 	{
-		g_Config->SetValue("WallRetake", vk);
+		Config::SetValue("WallRetake", vk);
 		g_WallRetakeBind = vk;
 	}
 
@@ -199,7 +240,7 @@ extern "C"
 
 	DllExport void SetShotgunHotkey(int vk)
 	{
-		g_Config->SetValue("Shotgun", vk);
+		Config::SetValue("Shotgun", vk);
 		g_ShotgunBind = vk;
 	}
 
@@ -267,6 +308,7 @@ extern "C"
 
 					if (g_LastWeapon == 0) // Pickaxe swing has a delay, 165ms is perfect
 						Sleep(165);
+					Sleep(7);
 
 					Keyboard::HoldKey(structureKey);
 
@@ -346,8 +388,9 @@ extern "C"
 			char sTitle[64];
 
 			GetWindowTextA(fw, sTitle, sizeof(sTitle));
-
-			g_IsGameUp = (sTitle[0] == 'F' && sTitle[1] == 'o');
+			std::string s = sTitle;
+			
+			g_IsGameUp = s.find("Fortnite") == 0;
 
 			Sleep(1000);
 		}

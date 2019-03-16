@@ -7,16 +7,17 @@ namespace EasyEditUI
 		TextBox m_textBox;
 		Form1 m_Parent;
 
-		public KeyListenForm(Form1 f, System.Windows.Forms.TextBox t)
+		public KeyListenForm(Form1 f, TextBox t)
 		{
 			m_textBox = t;
 			m_Parent = f;
 			InitializeComponent();
 			KeyDown   += KeyListenForm_KeyPress;
 			MouseDown += KeyListenForm_MouseDown;
-			ShowDialog();
+			MouseWheel += KeyListenForm_MouseDown;
 			FormBorderStyle = FormBorderStyle.FixedSingle;
 			MaximizeBox = false;
+			ShowDialog();
 		}
 
 		public void KeyListenForm_KeyPress(object sender, KeyEventArgs e)
@@ -135,6 +136,16 @@ namespace EasyEditUI
 			{
 				vK = 0x6;
 				index = Hotkey.GetHotkeyIndex(0x6);
+			}
+			else if(e.Delta > 0)
+			{
+				vK = 0xff;
+				index = Hotkey.GetHotkeyIndex(0xff);
+			}
+			else if(e.Delta < 0)
+			{
+				vK = 0xfe;
+				index = Hotkey.GetHotkeyIndex(0xfe);
 			}
 			else
 			{

@@ -8,4 +8,5 @@ struct Mouse
 	static void RightClickHold();
 	static void RightClickRelease();
 	static void RightClick(DWORD holdDelayMS);
+	static void Scroll(bool up);
 };

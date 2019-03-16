@@ -76,3 +76,19 @@ void Mouse::RightClick(DWORD holdDelayMS)
 
 	RightClickRelease();
 }
+
+void Mouse::Scroll(bool up)
+{
+	INPUT inp;
+	ZeroMemory(&inp, sizeof(inp));
+
+	inp.type           = INPUT_MOUSE;
+	inp.mi.dx          = 0;
+	inp.mi.dy          = 0;
+	inp.mi.dwFlags     = MOUSEEVENTF_WHEEL;
+	inp.mi.time        = 0;
+	inp.mi.dwExtraInfo = 0;
+	inp.mi.mouseData   = up?WHEEL_DELTA:-WHEEL_DELTA;
+
+	SendInput(1, &inp, sizeof(inp));
+}
