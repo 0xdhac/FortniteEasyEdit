@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Net;
 using System.Security.Cryptography;
 using System.IO;
+using System.Text;
 
 namespace EasyEditUI
 {
@@ -73,60 +74,6 @@ namespace EasyEditUI
 		public static extern void InitConfig();
 
 		[DllImport("EasyEditLib.dll", CallingConvention = CallingConvention.Cdecl)]
-		public static extern void SetWeaponHotkey(int index, int vk);
-
-		[DllImport("EasyEditLib.dll", CallingConvention = CallingConvention.Cdecl)]
-		public static extern int GetWeaponHotkey(int index);
-
-		[DllImport("EasyEditLib.dll", CallingConvention = CallingConvention.Cdecl)]
-		public static extern void SetBuildHotkey(int index, int vk);
-
-		[DllImport("EasyEditLib.dll", CallingConvention = CallingConvention.Cdecl)]
-		public static extern int GetBuildHotkey(int index);
-
-		[DllImport("EasyEditLib.dll", CallingConvention = CallingConvention.Cdecl)]
-		public static extern void SetFakeEditHotkey(int vk);
-
-		[DllImport("EasyEditLib.dll", CallingConvention = CallingConvention.Cdecl)]
-		public static extern int GetFakeEditHotkey();
-
-		[DllImport("EasyEditLib.dll", CallingConvention = CallingConvention.Cdecl)]
-		public static extern void SetUseHotkey(int vk);
-
-		[DllImport("EasyEditLib.dll", CallingConvention = CallingConvention.Cdecl)]
-		public static extern int GetUseHotkey();
-
-		[DllImport("EasyEditLib.dll", CallingConvention = CallingConvention.Cdecl)]
-		public static extern void SetFakeCrouchHotkey(int vk);
-
-		[DllImport("EasyEditLib.dll", CallingConvention = CallingConvention.Cdecl)]
-		public static extern int GetFakeCrouchHotkey();
-
-		[DllImport("EasyEditLib.dll", CallingConvention = CallingConvention.Cdecl)]
-		public static extern void SetRealCrouchHotkey(int vk);
-
-		[DllImport("EasyEditLib.dll", CallingConvention = CallingConvention.Cdecl)]
-		public static extern int GetRealCrouchHotkey();
-
-		[DllImport("EasyEditLib.dll", CallingConvention = CallingConvention.Cdecl)]
-		public static extern void SetRealEditHotkey(int vk);
-
-		[DllImport("EasyEditLib.dll", CallingConvention = CallingConvention.Cdecl)]
-		public static extern int GetRealEditHotkey();
-
-		[DllImport("EasyEditLib.dll", CallingConvention = CallingConvention.Cdecl)]
-		public static extern void SetWallRetakeHotkey(int vk);
-
-		[DllImport("EasyEditLib.dll", CallingConvention = CallingConvention.Cdecl)]
-		public static extern int GetWallRetakeHotkey();
-
-		[DllImport("EasyEditLib.dll", CallingConvention = CallingConvention.Cdecl)]
-		public static extern void SetShotgunHotkey(int vk);
-
-		[DllImport("EasyEditLib.dll", CallingConvention = CallingConvention.Cdecl)]
-		public static extern int GetShotgunHotkey();
-
-		[DllImport("EasyEditLib.dll", CallingConvention = CallingConvention.Cdecl)]
 		public static extern void EditT();
 		public static Thread m_EditThread;
 
@@ -146,10 +93,21 @@ namespace EasyEditUI
 		public static extern void CrouchT();
 		public static Thread m_CrouchThread;
 
+		//GetBind(int bind, char* name, char* displaynames, char* description, int& vkcode)
+		[DllImport("EasyEditLib.dll", CallingConvention = CallingConvention.Cdecl)]
+		public static extern int GetBind(int bind, StringBuilder name, StringBuilder displayname, StringBuilder description);
+
+		[DllImport("EasyEditLib.dll", CallingConvention = CallingConvention.Cdecl)]
+		public static extern int GetBindCount();
+
+		[DllImport("EasyEditLib.dll", CallingConvention = CallingConvention.Cdecl)]
+		public static extern int SetBind(byte[] name, int vkCode);
+
 		private static List<Pair<int, string>> KeyboardMap = new List<Pair<int, string>>();
 
 		public static void CreateKeyboardMap()
 		{
+			KeyboardMap.Add(new Pair<int, string>(0x0, "?"));
 			KeyboardMap.Add(new Pair<int, string>(0x01, "LMOUSE"));
 			KeyboardMap.Add(new Pair<int, string>(0x02, "RMOUSE"));
 			KeyboardMap.Add(new Pair<int, string>(0x04, "MIDDLEMOUSE"));
@@ -252,8 +210,8 @@ namespace EasyEditUI
 			KeyboardMap.Add(new Pair<int, string>(0xdd, "]"));
 			KeyboardMap.Add(new Pair<int, string>(0xde, "'"));
 			KeyboardMap.Add(new Pair<int, string>(0xe2, "\\"));
-			KeyboardMap.Add(new Pair<int, string>(0xff, "MWHEELUP"));
 			KeyboardMap.Add(new Pair<int, string>(0xfe, "MWHEELDOWN"));
+			KeyboardMap.Add(new Pair<int, string>(0xff, "MWHEELUP"));
 		}
 
 		public static string GetHotkeyName(int vk)

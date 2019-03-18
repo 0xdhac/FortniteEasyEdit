@@ -30,25 +30,21 @@ bool g_IsGameUp           = false;
 unsigned int g_LastWeapon = -1;
 unsigned int g_LastBuild  = -1;
 LastKeyType g_LastKeyType = Key_None;
-int g_FakeEditBind        = VK_LSHIFT;
-int g_RealEditBind        = 'L';
-int g_FakeCrouchBind      = VK_LCONTROL;
-int g_RealCrouchBind      = 'U';
-int g_WallRetakeBind      = 'G';
-int g_ShotgunBind         = '3';
-int g_UseBind             = 'E';
+Bind* g_FakeEditBind;
+Bind* g_RealEditBind;
+Bind* g_FakeCrouchBind;
+Bind* g_RealCrouchBind;
+Bind* g_WallRetakeBind;
+Bind* g_ShotgunBind;
+Bind* g_UseBind;
+Bind* g_FireBind;
+Bind* g_ADSBind;
+Bind* g_PlaceBuildingBind;
+Bind* g_EditResetBind;
+Bind* g_JumpBind;
 
-int g_BuildList[] =
-{
-	KEY_FLOOR, KEY_STAIR, KEY_CONE, KEY_WALL
-};
-
-int g_WeaponList[] =
-{
-	'1', '2', '3', '4', '5', '6'
-};
-
-Config* g_Config;
+Bind* g_BuildList[4];
+Bind* g_WeaponList[6];
 
 HHOOK hMouseHook;
 HHOOK hKeyboardHook;
@@ -60,11 +56,31 @@ LRESULT CALLBACK mouseProc(int nCode, WPARAM wParam, LPARAM lParam)
 		switch (wParam)
 		{
 		case WM_LBUTTONDOWN:
-			
+			FindAndSetKeyDownOnBind(WH_MOUSE_LL, WM_LBUTTONDOWN);
 			break;
 
 		case WM_LBUTTONUP:
-			
+			FindAndSetKeyUpOnBind(WH_MOUSE_LL, WM_LBUTTONDOWN);
+			break;
+
+		case WM_RBUTTONDOWN:
+			FindAndSetKeyDownOnBind(WH_MOUSE_LL, WM_RBUTTONDOWN);
+			break;
+
+		case WM_RBUTTONUP:
+			FindAndSetKeyUpOnBind(WH_MOUSE_LL, WM_RBUTTONDOWN);
+			break;
+
+		case WM_MOUSEWHEEL:
+			int zDelta = GET_WHEEL_DELTA_WPARAM(wParam);
+			if (zDelta > 0)
+			{
+				FindAndSetKeyDownOnBind(WH_MOUSE_LL, WM_MOUSEWHEEL, 0xff);
+			}
+			else if (zDelta < 0)
+			{
+				FindAndSetKeyDownOnBind(WH_MOUSE_LL, WM_MOUSEWHEEL, 0xfe);
+			}
 			break;
 		}
 	}
@@ -77,9 +93,17 @@ LRESULT CALLBACK keyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
 	switch (wParam)
 	{
 	case WM_KEYDOWN:
+	{
 		KBDLLHOOKSTRUCT k = *(LPKBDLLHOOKSTRUCT)lParam;
-		
+		FindAndSetKeyDownOnBind(WH_KEYBOARD_LL, WM_KEYDOWN, k.vkCode);
 		break;
+	}
+	case WM_KEYUP:
+	{
+		KBDLLHOOKSTRUCT k = *(LPKBDLLHOOKSTRUCT)lParam;
+		FindAndSetKeyUpOnBind(WH_KEYBOARD_LL, WM_KEYDOWN, k.vkCode);
+		break;
+	}
 	}
 
 	return CallNextHookEx(hKeyboardHook, nCode, wParam, lParam);
@@ -89,164 +113,60 @@ extern "C"
 {
 	DllExport void InitConfig()
 	{
-		
-		Config("config.cfg");
+		g_FakeEditBind = RegisterBind("FakeEdit", "Fake Edit Key", WH_KEYBOARD_LL, WM_KEYDOWN, VK_LSHIFT, "The button you will physically press to start editing a structure.");
+		g_RealEditBind = RegisterBind("RealEdit", "Real Edit Key", WH_KEYBOARD_LL, WM_KEYDOWN, 'L', "The button that is actually bound to edit structures in-game.");
+		g_FakeCrouchBind = RegisterBind("FakeCrouch", "Fake Crouch Key", WH_KEYBOARD_LL, WM_KEYDOWN, VK_LCONTROL, "The button you will physically press to crouch.");
+		g_RealCrouchBind = RegisterBind("RealCrouch", "Real Crouch Key", WH_KEYBOARD_LL, WM_KEYDOWN, 'U', "The button that is actually bound to crouch in-game.");
+		g_FireBind = RegisterBind("Fire", "Fire Key", WH_MOUSE_LL, WM_LBUTTONDOWN, VK_LBUTTON);
+		g_PlaceBuildingBind = RegisterBind("Place", "Place Building Key", WH_MOUSE_LL, WM_LBUTTONDOWN, VK_LBUTTON);
+		g_ADSBind = RegisterBind("ADS", "ADS Key", WH_MOUSE_LL, WM_RBUTTONDOWN, VK_RBUTTON);
+		g_UseBind = RegisterBind("Use", "Use Key", WH_KEYBOARD_LL, WM_KEYDOWN, 'E');
+		g_EditResetBind = RegisterBind("EditReset", "Edit Reset Key", WH_MOUSE_LL, WM_RBUTTONDOWN, VK_RBUTTON);
+		g_JumpBind = RegisterBind("Jump", "Jump Key", WH_MOUSE_LL, WM_MOUSEWHEEL, 0xff);
+		g_WallRetakeBind = RegisterBind("WallRetake", "Wall Retake Key", WH_KEYBOARD_LL, WM_KEYDOWN, 'G', "This key is used to wake enemy walls by attacking the structure and then placing your own wall before the enemy can.");
+		g_ShotgunBind = RegisterBind("Shotgun", "Shotgun Pullout Key", WH_KEYBOARD_LL, WM_KEYDOWN, '3', "The macro will press this key when you finish editing a structure so that you don't have to do it by yourself.");
+		g_BuildList[Build_Floor] = RegisterBind("Floor", "Floor Key", WH_KEYBOARD_LL, WM_KEYDOWN, 'Q');
+		g_BuildList[Build_Stair] = RegisterBind("Stair", "Stair Key", WH_KEYBOARD_LL, WM_KEYDOWN, 'C');
+		g_BuildList[Build_Cone] = RegisterBind("Cone", "Cone Key", WH_KEYBOARD_LL, WM_KEYDOWN, VK_XBUTTON1);
+		g_BuildList[Build_Wall] = RegisterBind("Wall", "Wall Key", WH_KEYBOARD_LL, WM_KEYDOWN, VK_XBUTTON2);
+		g_WeaponList[0] = RegisterBind("Weapon0", "Pickaxe Pullout Key", WH_KEYBOARD_LL, WM_KEYDOWN, '1');
+		g_WeaponList[1] = RegisterBind("Weapon1", "Weapon 1 Pullout Key", WH_KEYBOARD_LL, WM_KEYDOWN, '2');
+		g_WeaponList[2] = RegisterBind("Weapon2", "Weapon 2 Pullout Key", WH_KEYBOARD_LL, WM_KEYDOWN, '3');
+		g_WeaponList[3] = RegisterBind("Weapon3", "Weapon 3 Pullout Key", WH_KEYBOARD_LL, WM_KEYDOWN, '4');
+		g_WeaponList[4] = RegisterBind("Weapon4", "Weapon 4 Pullout Key", WH_KEYBOARD_LL, WM_KEYDOWN, '5');
+		g_WeaponList[5] = RegisterBind("Weapon5", "Weapon 5 Pullout Key", WH_KEYBOARD_LL, WM_KEYDOWN, '6');
 
-		g_FakeEditBind           = Config::FindValue("FakeEdit");
-		g_RealEditBind           = Config::FindValue("RealEdit");
-		g_FakeCrouchBind		 = Config::FindValue("FakeCrouch");
-		g_RealCrouchBind		 = Config::FindValue("RealCrouch");
-		g_UseBind                = Config::FindValue("Use");
-		g_WallRetakeBind         = Config::FindValue("WallRetake");
-		g_ShotgunBind            = Config::FindValue("Shotgun");
-		g_BuildList[Build_Floor] = Config::FindValue("Floor");
-		g_BuildList[Build_Stair] = Config::FindValue("Stair");
-		g_BuildList[Build_Cone]  = Config::FindValue("Cone");
-		g_BuildList[Build_Wall]  = Config::FindValue("Wall");
-		g_WeaponList[0]          = Config::FindValue("Weapon1");
-		g_WeaponList[1]          = Config::FindValue("Weapon2");
-		g_WeaponList[2]          = Config::FindValue("Weapon3");
-		g_WeaponList[3]          = Config::FindValue("Weapon4");
-		g_WeaponList[4]          = Config::FindValue("Weapon5");
-		g_WeaponList[5]          = Config::FindValue("Weapon6");
+		Config::InitJson("config.cfg");
 
 		hMouseHook    = SetWindowsHookEx(WH_MOUSE_LL, mouseProc, NULL, 0);
 		hKeyboardHook = SetWindowsHookEx(WH_KEYBOARD_LL, keyboardProc, NULL, 0);
 	}
 
-	DllExport void SetWeaponHotkey(int index, int vk)
+	DllExport int GetBindCount()
 	{
-		g_WeaponList[index] = vk;
-		
-		switch(index)
+		return BindList.size();
+	}
+
+	DllExport int GetBind(int bind, char* name, char* displayname, char* description)
+	{
+		strcpy_s(name, BindList.at(bind)->m_Name.length() + 1, BindList.at(bind)->m_Name.c_str());
+		strcpy_s(displayname, BindList.at(bind)->m_DisplayName.length() + 1, BindList.at(bind)->m_DisplayName.c_str());
+		strcpy_s(description, BindList.at(bind)->m_Description.length() + 1, BindList.at(bind)->m_Description.c_str());
+		return BindList.at(bind)->m_vkCode;
+	}
+
+	DllExport bool SetBind(char* bind, int vkCode)
+	{
+		for (Bind* b : BindList)
 		{
-		case 0:
-			Config::SetValue("Weapon1", vk);
-			break;
-		case 1:
-			Config::SetValue("Weapon2", vk);
-			break;
-		case 2:
-			Config::SetValue("Weapon3", vk);
-			break;
-		case 3:
-			Config::SetValue("Weapon4", vk);
-			break;
-		case 4:
-			Config::SetValue("Weapon5", vk);
-			break;
-		case 5:
-			Config::SetValue("Weapon6", vk);
-			break;
+			if (b->m_Name.compare(std::string(bind)) == 0)
+			{
+				UpdateBindKeyCode(std::string(bind), vkCode);
+				return true;
+			}
 		}
-	}
 
-	DllExport int GetWeaponHotkey(int index)
-	{
-		return g_WeaponList[index];
-	}
-
-	DllExport void SetBuildHotkey(int index, int vk)
-	{
-		g_BuildList[index] = vk;
-
-		switch (index)
-		{
-		case Build_Floor:
-			Config::SetValue("Floor", vk);
-			break;
-		case Build_Stair:
-			Config::SetValue("Stair", vk);
-			break;
-		case Build_Cone:
-			Config::SetValue("Cone", vk);
-			break;
-		case Build_Wall:
-			Config::SetValue("Wall", vk);
-			break;
-		}
-	}
-
-	DllExport int GetBuildHotkey(int index)
-	{
-		return g_BuildList[index];
-	}
-
-	DllExport void SetFakeEditHotkey(int vk)
-	{
-		Config::SetValue("FakeEdit", vk);
-		g_FakeEditBind = vk;
-	}
-
-	DllExport int GetFakeEditHotkey()
-	{
-		return g_FakeEditBind;
-	}
-
-	DllExport void SetUseHotkey(int vk)
-	{
-		Config::SetValue("Use", vk);
-		g_UseBind = vk;
-	}
-
-	DllExport int GetUseHotkey()
-	{
-		return g_UseBind;
-	}
-
-	DllExport void SetRealEditHotkey(int vk)
-	{
-		Config::SetValue("RealEdit", vk);
-		g_RealEditBind = vk;
-	}
-
-	DllExport int GetRealEditHotkey()
-	{
-		return g_RealEditBind;
-	}
-
-	DllExport void SetFakeCrouchHotkey(int vk)
-	{
-		Config::SetValue("FakeCrouch", vk);
-		g_FakeCrouchBind = vk;
-	}
-
-	DllExport int GetFakeCrouchHotkey()
-	{
-		return g_FakeCrouchBind;
-	}
-
-	DllExport void SetRealCrouchHotkey(int vk)
-	{
-		Config::SetValue("RealCrouch", vk);
-		g_RealCrouchBind = vk;
-	}
-
-	DllExport int GetRealCrouchHotkey()
-	{
-		return g_RealCrouchBind;
-	}
-
-	DllExport void SetWallRetakeHotkey(int vk)
-	{
-		Config::SetValue("WallRetake", vk);
-		g_WallRetakeBind = vk;
-	}
-
-	DllExport int GetWallRetakeHotkey()
-	{
-		return g_WallRetakeBind;
-	}
-
-	DllExport void SetShotgunHotkey(int vk)
-	{
-		Config::SetValue("Shotgun", vk);
-		g_ShotgunBind = vk;
-	}
-
-	DllExport int GetShotgunHotkey()
-	{
-		return g_ShotgunBind;
+		return false;
 	}
 
 	DllExport void EditT()
@@ -258,7 +178,7 @@ extern "C"
 		{
 			if (g_IsGameUp)
 			{
-				if (bIsEditKeyPressed == false && GetAsyncKeyState(g_FakeEditBind))
+				if (bIsEditKeyPressed == false && GetBindKeyDown(g_FakeEditBind))
 				{
 					bIsEditKeyPressed = true;
 
@@ -270,10 +190,10 @@ extern "C"
 
 					Keyboard::PressKey(g_RealEditBind, (rand() % 15) + 15); // Start edit
 					Sleep((rand() % 10) + 10); // Wait 10(+ 0-10)ms to allow edit reset
-					Mouse::RightClick(0); // Edit reset
+					Keyboard::PressKey(g_EditResetBind, (rand() % 15) + 8);
 				}
 
-				if (bIsEditKeyPressed == true && !GetAsyncKeyState(g_FakeEditBind))
+				if (bIsEditKeyPressed == true && !GetBindKeyDown(g_FakeEditBind))
 				{
 					bIsEditKeyPressed = false;
 
@@ -299,12 +219,12 @@ extern "C"
 		{
 			if (g_IsGameUp)
 			{
-				if (bIsRetakeKeyPressed == false && GetAsyncKeyState(g_WallRetakeBind))
+				if (bIsRetakeKeyPressed == false && GetBindKeyDown(g_WallRetakeBind))
 				{
 					bIsRetakeKeyPressed = true;
-					DWORD structureKey = g_BuildList[Build_Wall];
+					DWORD structureKey = g_BuildList[Build_Wall]->m_vkCode;
 
-					Mouse::LeftClick(0);
+					Keyboard::PressKey(g_FireBind, 0);
 
 					if (g_LastWeapon == 0) // Pickaxe swing has a delay, 165ms is perfect
 						Sleep(165);
@@ -314,7 +234,7 @@ extern "C"
 
 					for (int i = 0; i < 20; i++) // Spam the structure place button
 					{
-						Mouse::LeftClick(0);
+						Keyboard::PressKey(g_PlaceBuildingBind, 0);
 						Sleep(10);
 					}
 
@@ -326,7 +246,7 @@ extern "C"
 
 					Keyboard::PressKey(g_WeaponList[g_LastWeapon], rand() % 10 + 10);
 				}
-				else if (bIsRetakeKeyPressed == true && !GetAsyncKeyState(g_WallRetakeBind))
+				else if (bIsRetakeKeyPressed == true && !GetBindKeyDown(g_WallRetakeBind))
 				{
 					bIsRetakeKeyPressed = false;
 				}
@@ -349,14 +269,14 @@ extern "C"
 		{
 			if (g_IsGameUp)
 			{
-				if (bIsCrouchKeyPressed == false && GetAsyncKeyState(g_FakeCrouchBind))
+				if (bIsCrouchKeyPressed == false && GetBindKeyDown(g_FakeCrouchBind))
 				{
 					bIsCrouchKeyPressed = true;
 
 					Keyboard::PressKey(g_RealCrouchBind, (rand() % 15) + 15); // Start crouch
 				}
 
-				if (bIsCrouchKeyPressed == true && !GetAsyncKeyState(g_FakeCrouchBind))
+				if (bIsCrouchKeyPressed == true && !GetBindKeyDown(g_FakeCrouchBind))
 				{
 					bIsCrouchKeyPressed = false;
 
@@ -386,11 +306,9 @@ extern "C"
 				
 			HWND fw = GetForegroundWindow();
 			char sTitle[64];
-
 			GetWindowTextA(fw, sTitle, sizeof(sTitle));
-			std::string s = sTitle;
 			
-			g_IsGameUp = s.find("Fortnite") == 0;
+			g_IsGameUp = std::string(sTitle).find("Fortnite") == 0;
 
 			Sleep(1000);
 		}
@@ -404,7 +322,7 @@ extern "C"
 			{
 				for (int i = 0; i < 4; i++)
 				{
-					if (GetAsyncKeyState(g_BuildList[i]))
+					if (GetBindKeyDown(g_BuildList[i]))
 					{
 						g_LastBuild   = i;
 						g_LastKeyType = Key_Build;
@@ -413,7 +331,7 @@ extern "C"
 
 				for (int i = 0; i < 6; i++)
 				{
-					if (GetAsyncKeyState(g_WeaponList[i]))
+					if (GetBindKeyDown(g_WeaponList[i]))
 					{
 						g_LastWeapon  = i;
 						g_LastKeyType = Key_Weapon;

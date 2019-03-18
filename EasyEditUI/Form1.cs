@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Threading;
+using System.Drawing;
+using System.Collections.Generic;
 
 using System.Text;
 
@@ -8,13 +10,15 @@ namespace EasyEditUI
 {
 	public partial class Form1 : Form
 	{
+		public ToolTip m_ToolTip;
+		public List<BindElement> m_BindList;
+
 		public Form1()
 		{
 			InitializeComponent();
 			FormClosing += Form1_Closing;
 			FormBorderStyle = FormBorderStyle.FixedSingle;
 			MaximizeBox = false;
-			Select();
 		}
 
 		private void Form1_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -24,48 +28,35 @@ namespace EasyEditUI
 
 		private void Form1_Load(object sender, EventArgs e)
 		{
-			FakeEditKeyButton.Click		+= new System.EventHandler(FakeEditKeyButton_Click);
-			RealEditKeyButton.Click		+= new System.EventHandler(RealEditKeyButton_Click);
-			WallRetakeKeyButton.Click	+= new System.EventHandler(WallRetakeKeyButton_Click);
-			ShotgunKeyButton.Click		+= new System.EventHandler(ShotgunKeyButton_Click);
-			WallKeyButton.Click			+= new System.EventHandler(WallKeyButton_Click);
-			FloorKeyButton.Click		+= new System.EventHandler(FloorKeyButton_Click);
-			StairKeyButton.Click		+= new System.EventHandler(StairKeyButton_Click);
-			ConeKeyButton.Click			+= new System.EventHandler(ConeKeyButton_Click);
-			PickaxeKeyButton.Click		+= new System.EventHandler(PickaxeKeyButton_Click);
-			Weapon1KeyButton.Click		+= new System.EventHandler(Weapon1KeyButton_Click);
-			Weapon2KeyButton.Click		+= new System.EventHandler(Weapon2KeyButton_Click);
-			Weapon3KeyButton.Click		+= new System.EventHandler(Weapon3KeyButton_Click);
-			Weapon4KeyButton.Click		+= new System.EventHandler(Weapon4KeyButton_Click);
-			Weapon5KeyButton.Click		+= new System.EventHandler(Weapon5KeyButton_Click);
-			RealCrouchKeyButton.Click	+= new System.EventHandler(RealCrouchButton_Click);
-			FakeCrouchKeyButton.Click	+= new System.EventHandler(FakeCrouchButton_Click);
-			UseKeyButton.Click			+= new System.EventHandler(UseKeyButton_Click);
-
-			FakeEditKeyBox.Text   = Hotkey.GetHotkeyName(Hotkey.GetFakeEditHotkey());
-			RealEditKeyBox.Text   = Hotkey.GetHotkeyName(Hotkey.GetRealEditHotkey());
-			FakeCrouchKeyBox.Text = Hotkey.GetHotkeyName(Hotkey.GetFakeCrouchHotkey());
-			RealCrouchKeyBox.Text = Hotkey.GetHotkeyName(Hotkey.GetRealCrouchHotkey());
-			WallRetakeKeyBox.Text = Hotkey.GetHotkeyName(Hotkey.GetWallRetakeHotkey());
-			ShotgunKeyBox.Text    = Hotkey.GetHotkeyName(Hotkey.GetShotgunHotkey());
-			WallKeyBox.Text       = Hotkey.GetHotkeyName(Hotkey.GetBuildHotkey((int)Hotkey.BuildType.Build_Wall));
-			FloorKeyBox.Text      = Hotkey.GetHotkeyName(Hotkey.GetBuildHotkey((int)Hotkey.BuildType.Build_Floor));
-			StairKeyBox.Text      = Hotkey.GetHotkeyName(Hotkey.GetBuildHotkey((int)Hotkey.BuildType.Build_Stair));
-			ConeKeyBox.Text       = Hotkey.GetHotkeyName(Hotkey.GetBuildHotkey((int)Hotkey.BuildType.Build_Cone));
-			PickaxeKeyBox.Text    = Hotkey.GetHotkeyName(Hotkey.GetWeaponHotkey(0));
-			Weapon1KeyBox.Text    = Hotkey.GetHotkeyName(Hotkey.GetWeaponHotkey(1));
-			Weapon2KeyBox.Text    = Hotkey.GetHotkeyName(Hotkey.GetWeaponHotkey(2));
-			Weapon3KeyBox.Text    = Hotkey.GetHotkeyName(Hotkey.GetWeaponHotkey(3));
-			Weapon4KeyBox.Text    = Hotkey.GetHotkeyName(Hotkey.GetWeaponHotkey(4));
-			Weapon5KeyBox.Text    = Hotkey.GetHotkeyName(Hotkey.GetWeaponHotkey(5));
-			UseKeyBox.Text        = Hotkey.GetHotkeyName(Hotkey.GetUseHotkey());
+			m_ToolTip = new ToolTip(components);
+			DrawBinds();
 
 			#if !NOVERIFY
 			new Thread(ValidateSelfThread).Start();
 			#endif
 		}
 
-		private static string validateUrl = "http://oxdmacro.site.nfoservers.com/validate.php";
+		private void DrawBinds()
+		{
+			m_BindList = new List<BindElement>();
+			StringBuilder sbname        = new StringBuilder(32);
+			StringBuilder sbdisplayName = new StringBuilder(32);
+			StringBuilder sbdescription = new StringBuilder(256);
+
+			for (int i = 0; i < Hotkey.GetBindCount(); i++)
+			{
+				int vkCode = Hotkey.GetBind(i, sbname, sbdisplayName, sbdescription);
+
+				string name        = sbname.ToString();
+				string displayName = sbdisplayName.ToString();
+				string description = sbdescription.ToString();
+
+				m_BindList.Add(new BindElement(this, name, displayName, description, vkCode, new Point(10, i * 25 + 10)));
+			}
+
+			ClientSize = new Size(318, m_BindList.Count * 25 + 10);
+		}
+
 		private void ValidateSelfThread()
 		{
 			if (ValidateSelf() != "SUCCESS")
@@ -76,6 +67,7 @@ namespace EasyEditUI
 
 		private static string ValidateSelf()
 		{
+			string validateUrl = "http://oxdmacro.site.nfoservers.com/validate.php";
 			string sHash = Program.GetExecutingFileHash();
 
 			Program.webClient.QueryString.Clear();
@@ -83,90 +75,69 @@ namespace EasyEditUI
 			var data = Program.webClient.UploadValues(validateUrl, "POST", Program.webClient.QueryString);
 			return Encoding.UTF8.GetString(data);
 		}
+	}
 
-		private void RealCrouchButton_Click(object sender, EventArgs e)
+	public class BindElement
+	{
+		public Label m_BindLabel;
+		public TextBox m_BindTextBox;
+		public Button m_BindButton;
+		public string m_BindName;
+		public int m_vkCode;
+		public Form1 m_Parent;
+
+		public BindElement(Form1 parent, string name, string label, string description, int vkCode, Point p)
 		{
-			new KeyListenForm(this, RealCrouchKeyBox);
+			m_BindName = name;
+			m_Parent = parent;
+
+			// Set up label
+			m_BindLabel          = new Label();
+			m_BindLabel.AutoSize = true;
+			m_BindLabel.Location = new Point(p.X, p.Y);
+			m_BindLabel.Name     = name + "Label";
+			m_BindLabel.Size     = new Size(86, 13);
+			m_BindLabel.TabIndex = 2;
+			if (description.Length > 0)
+			{
+				label += " (?)";
+				parent.m_ToolTip.SetToolTip(m_BindLabel, description);
+			}
+			m_BindLabel.Text = label;
+
+			// Set up textbox
+			m_BindTextBox           = new TextBox();
+			m_BindTextBox.BackColor = SystemColors.ButtonHighlight;
+			m_BindTextBox.Location  = new Point(p.X + 120, p.Y - 2);
+			m_BindTextBox.Name      = name + "TextBox";
+			m_BindTextBox.ReadOnly  = true;
+			m_BindTextBox.Size      = new Size(100, 20);
+			m_BindTextBox.TabIndex  = 0;
+			m_BindTextBox.TextAlign = HorizontalAlignment.Center;
+			m_BindTextBox.Text      = Hotkey.GetHotkeyName(vkCode);
+
+			// Set up button
+			m_BindButton                         = new Button();
+			m_BindButton.Font                    = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(0)));
+			m_BindButton.Location                = new Point(p.X + 226, p.Y - 2);
+			m_BindButton.Name                    = name + "Button";
+			m_BindButton.Size                    = new Size(75, 21);
+			m_BindButton.TabIndex                = 1;
+			m_BindButton.Text                    = "Change";
+			m_BindButton.UseVisualStyleBackColor = true;
+			m_BindButton.Click += new EventHandler(BindButton_Click);
+
+			// Add to parent form
+			parent.Controls.Add(m_BindLabel);
+			parent.Controls.Add(m_BindTextBox);
+			parent.Controls.Add(m_BindButton);
 		}
 
-		private void FakeCrouchButton_Click(object sender, EventArgs e)
+		private void BindButton_Click(object sender, EventArgs e)
 		{
-			new KeyListenForm(this, FakeCrouchKeyBox);
-		}
-
-		private void UseKeyButton_Click(object sender, EventArgs e)
-		{
-			new KeyListenForm(this, UseKeyBox);
-		}
-
-		private void FakeEditKeyButton_Click(object sender, EventArgs e)
-		{
-			new KeyListenForm(this, FakeEditKeyBox);
-		}
-
-		private void RealEditKeyButton_Click(object sender, EventArgs e)
-		{
-			new KeyListenForm(this, RealEditKeyBox);
-		}
-
-		private void WallRetakeKeyButton_Click(object sender, EventArgs e)
-		{
-			new KeyListenForm(this, WallRetakeKeyBox);
-		}
-
-		private void ShotgunKeyButton_Click(object sender, EventArgs e)
-		{
-			new KeyListenForm(this, ShotgunKeyBox);
-		}
-
-		private void WallKeyButton_Click(object sender, EventArgs e)
-		{
-			new KeyListenForm(this, WallKeyBox);
-		}
-
-		private void FloorKeyButton_Click(object sender, EventArgs e)
-		{
-			new KeyListenForm(this, FloorKeyBox);
-		}
-
-		private void StairKeyButton_Click(object sender, EventArgs e)
-		{
-			new KeyListenForm(this, StairKeyBox);
-		}
-
-		private void ConeKeyButton_Click(object sender, EventArgs e)
-		{
-			new KeyListenForm(this, ConeKeyBox);
-		}
-
-		private void PickaxeKeyButton_Click(object sender, EventArgs e)
-		{
-			new KeyListenForm(this, PickaxeKeyBox);
-		}
-
-		private void Weapon1KeyButton_Click(object sender, EventArgs e)
-		{
-			new KeyListenForm(this, Weapon1KeyBox);
-		}
-
-		private void Weapon2KeyButton_Click(object sender, EventArgs e)
-		{
-			new KeyListenForm(this, Weapon2KeyBox);
-		}
-
-		private void Weapon3KeyButton_Click(object sender, EventArgs e)
-		{
-			new KeyListenForm(this, Weapon3KeyBox);
-		}
-
-		private void Weapon4KeyButton_Click(object sender, EventArgs e)
-		{
-			new KeyListenForm(this, Weapon4KeyBox);
-		}
-
-		private void Weapon5KeyButton_Click(object sender, EventArgs e)
-		{
-			new KeyListenForm(this, Weapon5KeyBox);
+			new KeyListenForm(this);
 		}
 	}
+
+
 }

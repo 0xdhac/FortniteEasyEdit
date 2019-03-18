@@ -48,3 +48,35 @@ void Keyboard::PressKey(DWORD key, DWORD holdDelayMS)
 		ReleaseKey(key);
 	}
 }
+
+void Keyboard::PressKey(Bind * bind, DWORD holdDelayMS)
+{
+	if (bind->m_HookType == WH_MOUSE_LL)
+	{
+		if (bind->m_vkCode == VK_LBUTTON)
+		{
+			Mouse::LeftClick(holdDelayMS);
+		}
+		else if (bind->m_vkCode == VK_RBUTTON)
+		{
+			Mouse::RightClick(holdDelayMS);
+		}
+		else if (bind->m_vkCode == 0xfe)
+		{
+			Mouse::Scroll(true);
+		}
+		else if (bind->m_vkCode == 0xff)
+		{
+			Mouse::Scroll(false);
+		}
+	}
+	else if (bind->m_HookType == WH_KEYBOARD_LL)
+	{
+		HoldKey(bind->m_vkCode);
+
+		if (holdDelayMS)
+			Sleep(holdDelayMS);
+
+		ReleaseKey(bind->m_vkCode);
+	}
+}
